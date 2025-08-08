@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intern_system/login_pages/login.dart';
 
-class ResetPassword extends StatelessWidget {
+class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
 
+  @override
+  State<ResetPassword> createState() => _ResetPasswordState();
+}
+
+class _ResetPasswordState extends State<ResetPassword> {
+  bool _ischecked = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,20 +71,71 @@ class ResetPassword extends StatelessWidget {
             borderRadius: BorderRadius.circular(5),
           ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 25),
-            child: TextField(
-              style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
-                hintText: 'info@gmail.com',
-                border: InputBorder.none,
-                 hintStyle: TextStyle(color: const Color.fromARGB(255, 172, 172, 172), fontWeight: FontWeight.bold)
-              ),
+          padding: const EdgeInsets.only(left: 25, top: 5),
+          child: TextField(
+            style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
+            decoration: InputDecoration(
+              hintText: 'fetehmireillelareine@gmail.com',
+              border: InputBorder.none,
+               hintStyle: TextStyle(color: const Color.fromARGB(255, 172, 172, 172), fontWeight: FontWeight.bold)
             ),
           ),
         ),
         ),
+        SizedBox(height: 15,),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30),
+            child: Text('Password', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
+          )),
+
+     Row(
+       children: [
+        SizedBox(
+          width: 25,
+        ),
+         Padding(
+           padding: const EdgeInsets.only(left: 5),
+           child: Container(
+            height: 50,
+            width: 350,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: const Color.fromARGB(255, 100, 99, 99),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(5),
+            ),
+                child:    Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 4, left: 10),
+                    child: TextField(
+                      style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
+                      obscureText: _ischecked,
+                      decoration: InputDecoration(
+                         border: InputBorder.none,
+                         hintText: "....................",
+                         hintStyle: TextStyle(color: const Color.fromARGB(255, 185, 181, 181), fontWeight: FontWeight.bold)
+                      ),
+                    ),
+                  ),
+                ),
+                 SizedBox(width: 100,),
+                    IconButton(onPressed: (){
+                      setState(() {
+                        _ischecked = !_ischecked;
+                      });
+                    }, icon: Icon(_ischecked? Icons.visibility_off : Icons.visibility, color: const Color.fromARGB(255, 100, 99, 99),)),
+              ],
+            ),
+               ),
+         ),
+       ],
+     ),
+      SizedBox(height: 45,),
          SizedBox(
       height:70,
      ),

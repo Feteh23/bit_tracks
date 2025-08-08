@@ -47,7 +47,7 @@ appBar: AppBar(
 body: Column(
   children: [
     SizedBox(
-      height: 40,
+      height: 20,
     ),
      Image.asset(
     'assets/typing_girl.jpg',
@@ -57,7 +57,7 @@ body: Column(
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 25),
+            padding: const EdgeInsets.only(left: 30),
             child: Text('Name', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
           )),
 
@@ -66,37 +66,82 @@ body: Column(
         SizedBox(
           width: 25,
         ),
-         Container(
-          height: 50,
-          width: 350,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color.fromARGB(255, 100, 99, 99),
-              width: 1,
+         Padding(
+           padding: const EdgeInsets.only(left: 5),
+           child: Container(
+            height: 50,
+            width: 350,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: const Color.fromARGB(255, 100, 99, 99),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(5),
             ),
-            borderRadius: BorderRadius.circular(5),
-          ),
-     child:    Expanded(
-       child: Padding(
-         padding: const EdgeInsets.only(top: 4, left: 10),
-         child: TextField(
-           style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
-           decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: "Feteh Mireille",
-              hintStyle: TextStyle(color: const Color.fromARGB(255, 192, 190, 190), fontWeight: FontWeight.bold)
-           ),
-         ),
-       ),
-     ),
+                child:    Expanded(
+                  child: Padding(
+           padding: const EdgeInsets.only(top: 4, left: 10),
+           child: TextField(
+             style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
+             decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "Feteh Mireille",
+                hintStyle: TextStyle(color: const Color.fromARGB(255, 192, 190, 190), fontWeight: FontWeight.bold)
              ),
+           ),
+                  ),
+                ),
+               ),
+         ),
        ],
      ),
-      SizedBox(height: 8,),
+       Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30),
+            child: Text('Email', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
+          )),
+
+     Row(
+       children: [
+        SizedBox(
+          width: 25,
+        ),
+         Padding(
+           padding: const EdgeInsets.only(left: 5),
+           child: Container(
+            height: 50,
+            width: 350,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: const Color.fromARGB(255, 100, 99, 99),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(5),
+            ),
+                child:    Expanded(
+                  child: Padding(
+           padding: const EdgeInsets.only(top: 4, left: 10),
+           child: TextField(
+             style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
+             decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "fetehmireillelareine@gmail.com",
+                hintStyle: TextStyle(color: const Color.fromARGB(255, 175, 173, 173), fontWeight: FontWeight.bold)
+             ),
+           ),
+                  ),
+                ),
+               ),
+         ),
+       ],
+     ),
+      SizedBox(height: 5,),
+
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 25),
+            padding: const EdgeInsets.only(left: 30),
             child: Text('Password', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
           )),
 
@@ -105,48 +150,54 @@ body: Column(
         SizedBox(
           width: 25,
         ),
-         Container(
-          height: 50,
-          width: 350,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color.fromARGB(255, 100, 99, 99),
-              width: 1,
+         Padding(
+           padding: const EdgeInsets.only(left: 5),
+           child: Container(
+            height: 50,
+            width: 350,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: const Color.fromARGB(255, 100, 99, 99),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(5),
             ),
-            borderRadius: BorderRadius.circular(5),
-          ),
-     child:    Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 4, left: 10),
-                  child: TextField(
-                    style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
-                    obscureText: _ischecked,
-                    decoration: InputDecoration(
-                       border: InputBorder.none,
-                       hintText: "....................",
-                       hintStyle: TextStyle(color: const Color.fromARGB(255, 188, 187, 187), fontWeight: FontWeight.bold)
+                child:    Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 4, left: 10),
+                    child: TextField(
+                      style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
+                      obscureText: _ischecked,
+                      decoration: InputDecoration(
+                         border: InputBorder.none,
+                         hintText: "....................",
+                         hintStyle: TextStyle(color: const Color.fromARGB(255, 188, 187, 187), fontWeight: FontWeight.bold)
+                      ),
                     ),
                   ),
                 ),
-              ),
-               SizedBox(width: 100,),
-                  IconButton(onPressed: (){
-                    setState(() {
-                      _ischecked = !_ischecked;
-                    });
-                  }, icon: Icon(_ischecked? Icons.visibility_off : Icons.visibility, color: const Color.fromARGB(255, 100, 99, 99),)),
-            ],
-          ),
-             ),
+                 SizedBox(width: 100,),
+                    IconButton(onPressed: (){
+                      setState(() {
+                        _ischecked = !_ischecked;
+                      });
+                    }, icon: Icon(_ischecked? Icons.visibility_off : Icons.visibility, color: const Color.fromARGB(255, 100, 99, 99),)),
+              ],
+            ),
+               ),
+         ),
        ],
      ),
-      SizedBox(height: 8,),
+     SizedBox(
+      height: 5,
+     ),
+      SizedBox(height: 5,),
        Align(
           alignment: Alignment.topLeft,
           child: Padding(
-            padding: const EdgeInsets.only(left: 25),
+            padding: const EdgeInsets.only(left: 30),
             child: Text('Branch', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
           )),
 
@@ -155,34 +206,37 @@ body: Column(
         SizedBox(
           width: 25,
         ),
-         Container(
-          height: 50,
-          width: 350,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color.fromARGB(255, 100, 99, 99),
-              width: 1,
+         Padding(
+           padding: const EdgeInsets.only(left: 5),
+           child: Container(
+            height: 50,
+            width: 350,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: const Color.fromARGB(255, 100, 99, 99),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(5),
             ),
-            borderRadius: BorderRadius.circular(5),
-          ),
-     child:    Expanded(
-       child: Padding(
-         padding: const EdgeInsets.only(top: 4, left: 10),
-         child: TextField(
-           style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
-           decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: "Software engineering",
-              hintStyle: TextStyle(color: const Color.fromARGB(255, 177, 177, 177), fontWeight: FontWeight.bold)
-           ),
-         ),
-       ),
-     ),
+                child:    Expanded(
+                  child: Padding(
+           padding: const EdgeInsets.only(top: 4, left: 10),
+           child: TextField(
+             style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
+             decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: "Software engineering",
+                hintStyle: TextStyle(color: const Color.fromARGB(255, 177, 177, 177), fontWeight: FontWeight.bold)
              ),
+           ),
+                  ),
+                ),
+               ),
+         ),
        ],
      ),
      SizedBox(
-      height:70,
+      height:10,
      ),
     Container(
   height: 50,

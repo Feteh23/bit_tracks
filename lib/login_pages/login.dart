@@ -96,6 +96,45 @@ body: Column(
        ],
      ),
       SizedBox(height: 8,),
+       Align(
+          alignment: Alignment.topLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 25),
+            child: Text('Email', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
+          )),
+
+     Row(
+       children: [
+        SizedBox(
+          width: 25,
+        ),
+         Container(
+          height: 50,
+          width: 350,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: const Color.fromARGB(255, 100, 99, 99),
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(5),
+          ),
+     child:    Expanded(
+       child: Padding(
+         padding: const EdgeInsets.only(top: 4, left: 10),
+         child: TextField(
+           style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
+           decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: "fetehmireillelareine@gmail.com",
+              hintStyle: TextStyle(color: const Color.fromARGB(255, 175, 173, 173), fontWeight: FontWeight.bold)
+           ),
+         ),
+       ),
+     ),
+             ),
+       ],
+     ),
+       SizedBox(height: 8,),
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
@@ -145,45 +184,6 @@ body: Column(
              ),
        ],
      ),
-      SizedBox(height: 8,),
-       Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 25),
-            child: Text('Branch', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
-          )),
-
-     Row(
-       children: [
-        SizedBox(
-          width: 25,
-        ),
-         Container(
-          height: 50,
-          width: 350,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color.fromARGB(255, 100, 99, 99),
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(5),
-          ),
-     child:    Expanded(
-       child: Padding(
-         padding: const EdgeInsets.only(top: 4, left: 10),
-         child: TextField(
-           style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
-           decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: "Software engineering",
-              hintStyle: TextStyle(color: const Color.fromARGB(255, 175, 173, 173), fontWeight: FontWeight.bold)
-           ),
-         ),
-       ),
-     ),
-             ),
-       ],
-     ),
       TextButton(onPressed: (){
                       Navigator.push(context,
                       MaterialPageRoute(
@@ -194,7 +194,7 @@ body: Column(
 alignment: Alignment.topRight,
           child: Padding(
             padding: const EdgeInsets.only(right: 25),
-            child: Text('Forget Password?', textAlign: TextAlign.right, style: TextStyle(color: const Color.fromARGB(255, 114, 26, 20)),),
+            child: Text('Forget Password?', textAlign: TextAlign.right, style: TextStyle(color: const Color.fromARGB(255, 114, 26, 20),fontWeight: FontWeight.bold),),
           )),
         
       ),
@@ -209,10 +209,10 @@ alignment: Alignment.topRight,
                  _isobscured = !_isobscured;
                 });
                
-             }, icon:Icon(_isobscured? Icons.check_box : Icons.check_box_outline_blank, color: _ischecked? const Color.fromARGB(255, 100, 99, 99): const Color.fromARGB(255, 228, 227, 227),)),
+             }, icon:Icon(_isobscured? Icons.check_box : Icons.check_box_outline_blank, color: _isobscured? const Color.fromARGB(255, 100, 99, 99): const Color.fromARGB(255, 100, 99, 99),)),
               Padding(
                 padding: const EdgeInsets.only(left: 18),
-                child: Text('I accept all terms and conditions'),
+                child: Text('I accept all terms and conditions', style: TextStyle(fontWeight: FontWeight.bold),),
               )
             ],
           ),
@@ -258,7 +258,7 @@ alignment: Alignment.topRight,
                         builder: (BuildContext context) => Signup(),
                       ));
         },
-        child: Text('Sign Up', style: TextStyle(color: Color.fromARGB(255, 114, 26, 20),),),
+        child: Text('Sign Up', style: TextStyle(color: Color.fromARGB(255, 114, 26, 20),fontWeight: FontWeight.bold),),
         
       ),
               

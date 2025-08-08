@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intern_system/login_pages/welcomepage.dart';
-
+import 'package:image_picker/image_picker.dart';
 
 
 void main() {

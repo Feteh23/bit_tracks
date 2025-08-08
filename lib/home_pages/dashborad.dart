@@ -19,8 +19,8 @@ class _DashboradState extends State<Dashborad> {
   }
   final List<Widget> _pages =[
 Home(),
-Profilepage(),
 Taskpage(),
+Profilepage(),
   ];
   @override
   Widget build(BuildContext context) {
