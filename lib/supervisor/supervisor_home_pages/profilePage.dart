@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intern_system/login_pages/reset_password.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-class Profilepage extends StatefulWidget {
-  const Profilepage({super.key});
+import 'package:intern_system/supervisor/supervisor_login_pages/reset_password.dart';
+class SupervisorProfile extends StatefulWidget {
+  const SupervisorProfile({super.key});
 
   @override
-  State<Profilepage> createState() => _ProfilepageState();
+  State<SupervisorProfile> createState() => _SupervisorProfileState();
 }
 
-class _ProfilepageState extends State<Profilepage> {
-  bool _ischecked = true;
-  final ImagePicker _picker = ImagePicker();
+class _SupervisorProfileState extends State<SupervisorProfile> {
+  bool _ischecked = false;
+    final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
-
-void _openGallery() async {
+  void _openGallery() async {
   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
   if (image != null) {
     setState(() {
@@ -23,11 +22,10 @@ void _openGallery() async {
     });
   }
 }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
- appBar: AppBar(
+       appBar: AppBar(
   backgroundColor: const Color.fromARGB(255, 114, 26, 20),
   leading:
   IconButton(
@@ -36,7 +34,6 @@ void _openGallery() async {
       Navigator.pop(context);
     },
   ),
-
   title: Align(
     child: Text(
       "Bit Tracks Profile",
@@ -56,7 +53,6 @@ void _openGallery() async {
       },
     ),
   ],
-
 ),
 body: Column(
   children: [
@@ -81,7 +77,7 @@ body: Column(
             ? (kIsWeb
                 ? NetworkImage(_imageFile!.path)
                 : FileImage(File(_imageFile!.path)) as ImageProvider)
-            : AssetImage('assets/me.jpg'),
+            : AssetImage('assets/laughing.jpg'),
         fit: BoxFit.cover,
       ),
       borderRadius: BorderRadius.all(Radius.circular(100)),
@@ -105,8 +101,8 @@ body: Column(
         ),
       ],
     ),
-    Center(child: Text("Feteh Mireille", style: TextStyle(color: const Color.fromARGB(255, 107, 106, 106),fontSize:20, fontWeight: FontWeight.bold),)),
-    Center(child: Text("Software Engineering", style: TextStyle(color: const Color.fromARGB(255, 107, 106, 106),fontSize:22, fontWeight: FontWeight.bold),)),
+    Center(child: Text("Mr Nchi Marcnus", style: TextStyle(color: const Color.fromARGB(255, 107, 106, 106),fontSize:20, fontWeight: FontWeight.bold),)),
+    Center(child: Text("Networking", style: TextStyle(color: const Color.fromARGB(255, 107, 106, 106),fontSize:22, fontWeight: FontWeight.bold),)),
     SizedBox(height: 40,),
         Align(
           alignment: Alignment.topLeft,
@@ -131,7 +127,7 @@ body: Column(
             child: TextField(
               style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
               decoration: InputDecoration(
-                hintText: 'fetehmireillelareine@gmail.com',
+                hintText: 'nchimarcnus@gmail.com',
                 border: InputBorder.none,
                  hintStyle: TextStyle(color: const Color.fromARGB(255, 172, 172, 172), fontWeight: FontWeight.bold)
               ),
@@ -217,7 +213,7 @@ body: Column(
  TextButton(onPressed: (){
                       Navigator.push(context,
                       MaterialPageRoute(
-                        builder: (BuildContext context) =>ResetPassword(),
+                        builder: (BuildContext context) =>ResetPassword_supervisor(),
                       ));
         },
         child:  Align(

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:intern_system/home_pages/attendance.dart';
-import 'package:intern_system/home_pages/dashborad.dart';
-import 'package:intern_system/home_pages/profilepage.dart';
-import 'package:intern_system/home_pages/supervisor.dart';
-import 'package:intern_system/home_pages/taskpage.dart';
-import 'package:intern_system/login_pages/login.dart';
-class Home extends StatelessWidget {
-  const Home({super.key});
+import 'package:intern_system/supervisor/supervisor_home_pages/dashboard.dart';
+import 'package:intern_system/supervisor/supervisor_home_pages/profilePage.dart';
+import 'package:intern_system/supervisor/supervisor_home_pages/taskPage.dart';
+import 'package:intern_system/supervisor/supervisor_login_pages/login.dart';
 
+class HomePage_supervisor extends StatefulWidget {
+  const HomePage_supervisor({super.key});
+
+  @override
+  State<HomePage_supervisor> createState() => _HomePage_supervisorState();
+}
+
+class _HomePage_supervisorState extends State<HomePage_supervisor> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,8 +21,6 @@ class Home extends StatelessWidget {
    Builder(builder: (BuildContext context) {
           return IconButton(onPressed: (){Scaffold.of(context).openDrawer();}, icon: Icon(Icons.menu), color: Colors.white, iconSize: 38,);
         }),
-      
-
   title: Align(
     child: Text(
       "Bit Tracks",
@@ -38,9 +40,8 @@ class Home extends StatelessWidget {
       },
     ),
   ],
-
 ),
-         drawer: Drawer(
+ drawer: Drawer(
       child: Container(
         color: const Color.fromARGB(255, 114, 26, 20),
         child: ListView(
@@ -50,7 +51,7 @@ class Home extends StatelessWidget {
               child: TextButton(onPressed: (){
                      Navigator.push(context,
                      MaterialPageRoute(
-                       builder: (BuildContext context) => Dashborad(),
+                       builder: (BuildContext context) => Dashboard_supervisor(),
                      ));
                       },
                         child: CircleAvatar(radius: 15,child: Icon(Icons.close),),
@@ -75,7 +76,7 @@ class Home extends StatelessWidget {
                   TextButton(onPressed: (){
                          Navigator.push(context,
                          MaterialPageRoute(
-                           builder: (BuildContext context) => Dashborad(),
+                           builder: (BuildContext context) => Dashboard_supervisor(),
                          ));
                           },
                             child: CircleAvatar(radius: 15,child: Icon(Icons.house, color: const Color.fromARGB(255, 114, 26, 20),),)
@@ -94,14 +95,14 @@ class Home extends StatelessWidget {
                   TextButton(onPressed: (){
                           Navigator.push(context,
                           MaterialPageRoute(
-                            builder: (BuildContext context) => Taskpage(),
+                            builder: (BuildContext context) => SupervisorTask(),
                           ));
                            },
                              child: CircleAvatar(radius: 15,child: Icon(Icons.task, color: const Color.fromARGB(255, 114, 26, 20),),)
                            
                          ),
                   SizedBox(width: 30,),
-                  Text('task', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)
+                  Text('create a tasks', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)
                 ],
               ),
             ),
@@ -113,7 +114,7 @@ class Home extends StatelessWidget {
                   TextButton(onPressed: (){
                           Navigator.push(context,
                           MaterialPageRoute(
-                            builder: (BuildContext context) => Profilepage(),
+                            builder: (BuildContext context) => SupervisorProfile(),
                           ));
                            },
                               child: CircleAvatar(radius: 15,child: Icon(Icons.person, color: const Color.fromARGB(255, 114, 26, 20),),),
@@ -132,14 +133,14 @@ class Home extends StatelessWidget {
                   TextButton(onPressed: (){
                           Navigator.push(context,
                           MaterialPageRoute(
-                            builder: (BuildContext context) => Supervisor(),
+                            builder: (BuildContext context) => Dashboard_supervisor(),
                           ));
                            },
                               child: CircleAvatar(radius: 15,child: Icon(Icons.supervisor_account, color: const Color.fromARGB(255, 114, 26, 20),),),
                            
                          ),
                   SizedBox(width: 30,),
-                  Text('Supervisor', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)
+                  Text('intern list', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)
                 ],
                            ),
              ),
@@ -151,14 +152,14 @@ class Home extends StatelessWidget {
                   TextButton(onPressed: (){
                           Navigator.push(context,
                           MaterialPageRoute(
-                            builder: (BuildContext context) => Attendance(),
+                            builder: (BuildContext context) => Dashboard_supervisor(),
                           ));
                            },
                               child: CircleAvatar(radius: 15,child: Icon(Icons.check_box, color: const Color.fromARGB(255, 114, 26, 20),),),
                            
                          ),
                   SizedBox(width: 30,),
-                  Text('Attendance', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)
+                  Text(' track intern Attendance', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),)
                 ],
                            ),
              ),
@@ -171,7 +172,7 @@ class Home extends StatelessWidget {
                   TextButton(onPressed: (){
                          Navigator.push(context,
                          MaterialPageRoute(
-                           builder: (BuildContext context) => Homepage(),
+                           builder: (BuildContext context) => Login(),
                          ));
                           },
                             child: CircleAvatar(radius: 15,child: Icon(Icons.logout, color: const Color.fromARGB(255, 114, 26, 20),),)
@@ -187,123 +188,7 @@ class Home extends StatelessWidget {
         ),
       ),
      ) ,
-     body: SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-       child: Column(
-        
-        children: [
-           Padding(
-             padding: const EdgeInsets.all(16.0),
-             child: Column(
-               crossAxisAlignment: CrossAxisAlignment.start,
-               children: [
-                 // Dashboard Summary
-                 SingleChildScrollView(
-                   scrollDirection: Axis.horizontal,
-                   child: Row(
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                     children: [
-                       _buildSummaryCard('20', 'Interns'),
-                       _buildSummaryCard('5', 'Departments'),
-                       _buildSummaryCard('2', 'Upcoming Deadlines'),
-                     ],
-                   ),
-                 ),
-                 SizedBox(height: 20),
-                 // Intern Directory
-                 SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                   child: Column(
-                     children: [
-                       Text('Intern Directory', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                   SizedBox(height: 10),
-                   _buildInternCard('Feteh Mireille', 'mobile dev', 'fetehmireille@gmail.com'),
-                   _buildInternCard('Nyanga piethras', 'front end', 'piethrasn@gmail.com'),
-                   _buildInternCard('Mimber prescienne', 'back end', 'mimber@gmail.com'),
-                   _buildInternCard('tekum silvia', 'full stack', 'silvia@gmail.com'),
-                   SizedBox(height: 20),
-                   // Task Management
-                   Text('Task Management', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                   SizedBox(height: 10),
-                   _buildTaskCard('Assign Project X', 0.7, Colors.orange),
-                   _buildTaskCard('Review Reports', 0.5, Colors.blue),
-                   _buildTaskCard('Fix Website Bug', 0.3, Colors.grey),
-                   SizedBox(height: 20),
-                   // Notifications
-                   Text('Notifications', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                   SizedBox(height: 10),
-                   _buildNotificationCard('Feteh Mireille has been onboarded'),
-                   _buildNotificationCard('New task assigned: Update...'),
-                   _buildNotificationCard('Deadline tomorrow for Internship Reports'),
-                                ],
-                     
-                   ),
-                 ),
-       
-         ] ),
-           )
-           ]
-           ),
-     )
-    );
-  }
 
-  Widget _buildSummaryCard(String count, String label) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text(count, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            SizedBox(height: 5),
-            Text(label, style: TextStyle(fontSize: 16)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInternCard(String name, String department, String email) {
-    return Card(
-      child: ListTile(
-        title: Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(department),
-            Text(email),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTaskCard(String task, double progress, Color color) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(task, style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            LinearProgressIndicator(
-              value: progress,
-              color: color,
-              backgroundColor: color.withOpacity(0.3),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNotificationCard(String notification) {
-    return Card(
-      child: ListTile(
-        leading: Icon(Icons.notifications, color: Colors.red),
-        title: Text(notification),
-      ),
     );
   }
 }
