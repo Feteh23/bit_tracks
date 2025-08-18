@@ -34,6 +34,13 @@ dependencies:
   table_calendar: ^3.0.8
   file_picker: ^6.1.1
   pie_chart: ^5.4.0
+  firebase_core: ^2.30.0
+  firebase_auth: ^4.19.0
+  cloud_firestore: ^4.17.0
+  firebase_storage: ^11.7.0
+  cloud_functions: ^4.5.3
+
+
 
 
   # The following adds the Cupertino Icons font to your application.

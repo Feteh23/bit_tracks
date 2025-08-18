@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intern_system/login_pages/redirection_page.dart';
+import 'package:intern_system/login_pages/login.dart';
 
 class Welcomepage extends StatelessWidget {
   const Welcomepage({super.key});
@@ -22,7 +22,7 @@ class Welcomepage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (BuildContext context) => RedirectionPage(),
+                    builder: (BuildContext context) => Homepage(),
                   ),
                 );
               },

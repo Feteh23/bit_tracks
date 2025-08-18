@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intern_system/home_pages/dashborad.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -7,8 +8,47 @@ class Signup extends StatefulWidget {
   @override
   State<Signup> createState() => _SignupState();
 }
- bool _ischecked = true;
+
 class _SignupState extends State<Signup> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final branchController = TextEditingController();
+  String selectedRole = 'intern'; // default role
+  bool _ischecked = true; 
+
+  Future<void> signUpUser() async {
+    try {
+      final userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      final uid = userCredential.user!.uid;
+
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
+        'name': nameController.text.trim(),
+        'email': emailController.text.trim(),
+        'branch': branchController.text.trim(),
+        'role': selectedRole,
+        'uid': uid, 
+      });
+
+      if (selectedRole == 'admin') {
+        Navigator.pushReplacementNamed(context, '/adminDashboard');
+      } else if (selectedRole == 'supervisor') {
+        Navigator.pushReplacementNamed(context, '/supervisorDashboard');
+      } else {
+        Navigator.pushReplacementNamed(context, '/internDashboard');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Signup failed: ${e.toString()}')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return   Scaffold(
@@ -37,7 +77,7 @@ appBar: AppBar(
     IconButton(
       icon: Icon(Icons.book_online_outlined, color: Colors.white),
       onPressed: () {
-        // Add your action here
+        
       },
     ),
   ],
@@ -83,6 +123,7 @@ body: Column(
            padding: const EdgeInsets.only(top: 4, left: 10),
            child: TextField(
              style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
+             controller: nameController,
              decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: "Feteh Mireille",
@@ -124,6 +165,7 @@ body: Column(
            padding: const EdgeInsets.only(top: 4, left: 10),
            child: TextField(
              style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
+              controller: emailController,
              decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: "fetehmireillelareine@gmail.com",
@@ -170,6 +212,7 @@ body: Column(
                     child: TextField(
                       style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
                       obscureText: _ischecked,
+                       controller: passwordController,
                       decoration: InputDecoration(
                          border: InputBorder.none,
                          hintText: "....................",
@@ -223,6 +266,7 @@ body: Column(
            padding: const EdgeInsets.only(top: 4, left: 10),
            child: TextField(
              style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
+             controller: branchController,
              decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: "Software engineering",
@@ -252,15 +296,46 @@ body: Column(
   child: Padding(
     padding: const EdgeInsets.only(top: 4, left: 10),
     child: Align(
-      child: TextButton(onPressed: (){
-                      Navigator.push(context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => Dashborad(),
-                      ));
-        },
-        child: Center(child: Text('SignUp', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20),)),
-        
-      ),
+      child: TextButton(
+  onPressed: () async {
+    try {
+      final userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+
+      final uid = userCredential.user!.uid;
+
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
+        'name': nameController.text.trim(),
+        'email': emailController.text.trim(),
+        'branch': branchController.text.trim(),
+        'role': selectedRole,
+      });
+
+      // Navigate based on role
+      if (selectedRole == 'admin') {
+        Navigator.pushReplacementNamed(context, '/adminDashboard');
+      } else if (selectedRole == 'supervisor') {
+        Navigator.pushReplacementNamed(context, '/supervisorDashboard');
+      } else {
+        Navigator.pushReplacementNamed(context, '/internDashboard');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Signup failed: ${e.toString()}')),
+      );
+    }
+  },
+  child: Center(
+    child: Text(
+      'SignUp',
+      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20),
+    ),
+  ),
+)
+
     ),
   ),
 ),

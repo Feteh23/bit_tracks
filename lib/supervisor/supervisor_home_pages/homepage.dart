@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intern_system/login_pages/login.dart';
 import 'package:intern_system/supervisor/supervisor_home_pages/dashboard.dart';
 import 'package:intern_system/supervisor/supervisor_home_pages/profilePage.dart';
 import 'package:intern_system/supervisor/supervisor_home_pages/taskPage.dart';
-import 'package:intern_system/supervisor/supervisor_login_pages/login.dart';
+
 
 class HomePage_supervisor extends StatefulWidget {
   const HomePage_supervisor({super.key});
@@ -23,7 +24,7 @@ class _HomePage_supervisorState extends State<HomePage_supervisor> {
         }),
   title: Align(
     child: Text(
-      "Bit Tracks",
+      "Supervisor Dashboard",
       style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
@@ -172,7 +173,7 @@ class _HomePage_supervisorState extends State<HomePage_supervisor> {
                   TextButton(onPressed: (){
                          Navigator.push(context,
                          MaterialPageRoute(
-                           builder: (BuildContext context) => Login(),
+                           builder: (BuildContext context) => Homepage(),
                          ));
                           },
                             child: CircleAvatar(radius: 15,child: Icon(Icons.logout, color: const Color.fromARGB(255, 114, 26, 20),),)

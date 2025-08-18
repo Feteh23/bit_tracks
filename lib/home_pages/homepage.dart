@@ -21,7 +21,7 @@ class Home extends StatelessWidget {
 
   title: Align(
     child: Text(
-      "Bit Tracks",
+      "Intern Dashboard",
       style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:intern_system/supervisor/supervisor_login_pages/reset_password.dart';
+import 'package:intern_system/login_pages/reset_password.dart';
 class SupervisorProfile extends StatefulWidget {
   const SupervisorProfile({super.key});
 
@@ -213,7 +213,7 @@ body: Column(
  TextButton(onPressed: (){
                       Navigator.push(context,
                       MaterialPageRoute(
-                        builder: (BuildContext context) =>ResetPassword_supervisor(),
+                        builder: (BuildContext context) => ResetPassword(),
                       ));
         },
         child:  Align(
