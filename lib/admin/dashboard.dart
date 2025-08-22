@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intern_system/admin/homepage.dart';
 import 'package:intern_system/admin/profilepage.dart';
-import 'package:intern_system/admin/viewusers.dart';
+import 'package:intern_system/admin/pair_users.dart';
 
 class AdminDashboar extends StatefulWidget {
   const AdminDashboar({super.key});
@@ -20,7 +20,7 @@ class _AdminDashboarState extends State<AdminDashboar> {
   final List<Widget> _pages =[
     AdminHomepage(),
     Adminprofilepage(),
-    Adminviewuserspage(),
+    AdminPairUserspage(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _AdminDashboarState extends State<AdminDashboar> {
         items: [
           BottomNavigationBarItem(icon: CircleAvatar(child: Icon(Icons.home, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'Home'  ),
           BottomNavigationBarItem(icon: CircleAvatar(child: Icon(Icons.person, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'Profile'),
-          BottomNavigationBarItem(icon: CircleAvatar(child: Icon(Icons.supervisor_account, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'view user'),
+          BottomNavigationBarItem(icon: CircleAvatar(child: Icon(Icons.supervisor_account, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'pair user'),
         ]),
 
     );

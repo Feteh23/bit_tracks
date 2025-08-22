@@ -36,13 +36,13 @@ Future<String> getUserRole(String uid) async {
 void loginUser() async {
   if (emailController.text.isEmpty || passwordController.text.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Please enter both email and password')),
+      SnackBar(content: Text('Please enter both email and password',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 255, 255, 255),),)),
     );
     return;
   }
   if (!_termsAccepted) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Please accept the terms and conditions')),
+      SnackBar(content: Text('Please accept the terms and conditions',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 255, 255, 255),),)),
     );
     return;
   }
@@ -65,7 +65,7 @@ void loginUser() async {
   } catch (e) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Login failed: ${e.toString()}')),
+      SnackBar(content: Text('Login failed: ${e.toString()}',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 255, 255, 255),),)),
     );
   } finally {
     setState(() => _isLoading = false);

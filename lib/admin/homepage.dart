@@ -1,55 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intern_system/admin/dashboard.dart';
-import 'package:intern_system/admin/profilepage.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 
 class AdminHomepage extends StatefulWidget {
   const AdminHomepage({super.key});
-
   @override
   State<AdminHomepage> createState() => _AdminHomepageState();
 }
-
 class _AdminHomepageState extends State<AdminHomepage> {
-    final TextEditingController nameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   String selectedRole = 'intern';
-
   final roles = ['intern', 'supervisor', 'admin'];
-
   Future<void> createUser() async {
     try {
       final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      
       final uid = userCredential.user!.uid;
-
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
         'name': nameController.text.trim(),
         'email': emailController.text.trim(),
         'role': selectedRole,
-        'branch': '', // Optional
+        'branch': '', 
       });
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User created successfully')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User created successfully', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)));
       nameController.clear();
       emailController.clear();
       passwordController.clear();
       setState(() => selectedRole = 'intern');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}',  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)));
     }
   }
+ Future<void> deleteUser(BuildContext context, String uid) async {
+  final docRef = FirebaseFirestore.instance.collection('users').doc(uid);
+  final snapshot = await docRef.get();
+  if (!snapshot.exists) return;
 
-  Future<void> deleteUser(String uid) async {
-    await FirebaseFirestore.instance.collection('users').doc(uid).delete();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User deleted')));
-  }
+  final userData = snapshot.data(); // Save user info before deletion
+  await docRef.delete();
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('User deleted', style: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    ),),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () async {
+          await FirebaseFirestore.instance.collection('users').doc(uid).set(userData!);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('User restored', style: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+    ),)),
+          );
+        },
+      ),
+      duration: Duration(seconds: 30),
+    ),
+  );
+}
   @override
   Widget build(BuildContext context) {
       return DefaultTabController(
@@ -94,10 +108,8 @@ class _AdminHomepageState extends State<AdminHomepage> {
               unselectedLabelStyle: TextStyle(fontSize: 14),
               indicatorColor: Colors.white, 
               indicatorWeight: 4.0, 
-              indicatorPadding: EdgeInsets.symmetric(horizontal: 16),
+              indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
               indicatorSize: TabBarIndicatorSize.label, 
-            
-            
             ),
             ),
           ),
@@ -113,7 +125,6 @@ class _AdminHomepageState extends State<AdminHomepage> {
     color: Colors.black,
     fontWeight: FontWeight.bold,
   ),
-
                    decoration: InputDecoration(
                     labelText: 'Name',
                     labelStyle: TextStyle( 
@@ -130,7 +141,6 @@ class _AdminHomepageState extends State<AdminHomepage> {
     ),
  hintText: 'Enter full name',
     hintStyle: TextStyle(color: Colors.grey),
-
                     )
                     ),
                     SizedBox(height: 25,),
@@ -190,7 +200,7 @@ class _AdminHomepageState extends State<AdminHomepage> {
                      SizedBox(height: 25,),
                   DropdownButtonFormField(
                     value: selectedRole,
-                    items: roles.map((role) => DropdownMenuItem(value: role, child: Text(role))).toList(),
+                    items: roles.map((role) => DropdownMenuItem(value: role, child: Text(role, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),))).toList(),
                     onChanged: (value) => setState(() => selectedRole = value!),
                     decoration: InputDecoration(
                       labelText: 'Role', 
@@ -220,7 +230,6 @@ class _AdminHomepageState extends State<AdminHomepage> {
     ),
   ),
 ),
-
                 ],
               ),
             ),
@@ -249,13 +258,13 @@ class _AdminHomepageState extends State<AdminHomepage> {
                     final role = user['role'];
 
                     return ListTile(
-                      title: Text('$name ($role)'),
-                      subtitle: Text(email),
+                      title: Text('$name ($role)', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                      subtitle: Text(email, style: TextStyle(fontSize: 16),),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.edit, color: Colors.blue),
+                            icon: Icon(Icons.edit, color: const Color.fromARGB(255, 100, 99, 99)),
                             onPressed: () {
                               showEditUserDialog(
                                 context,
@@ -263,12 +272,13 @@ class _AdminHomepageState extends State<AdminHomepage> {
                                 name: user['name'],
                                 email: user['email'],
                                 branch: user['branch'] ?? '',
+                                 role: user['role'] ?? 'intern',
                               );
                             },
                           ),
                           IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => deleteUser(uid),
+                            icon: Icon(Icons.delete, color: const Color.fromARGB(255, 214, 32, 19)),
+                           onPressed: () => deleteUser(context, uid),
                           ),
                         ],
                       ),
@@ -277,7 +287,6 @@ class _AdminHomepageState extends State<AdminHomepage> {
                 );
               },
             ),
-
             // Complaints Tab
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance.collection('complaints').snapshots(),
@@ -306,56 +315,91 @@ class _AdminHomepageState extends State<AdminHomepage> {
     );
   }
 }
-Future<void> showEditUserDialog(BuildContext context, {
+Future<void> showEditUserDialog(
+  BuildContext context, {
   required String uid,
   required String name,
   required String email,
   required String branch,
+  required String role, 
 }) async {
   final nameController = TextEditingController(text: name);
   final emailController = TextEditingController(text: email);
   final branchController = TextEditingController(text: branch);
-
+  String selectedRole = role;
+  final roles = ['intern', 'supervisor', 'admin'];
   final shouldSave = await showDialog<bool>(
     context: context,
-    builder: (ctx) => AlertDialog(
-      title: Text('Edit User Info'),
-      content: SingleChildScrollView(
-        child: Column(
-          children: [
-            TextField(controller: nameController, decoration: InputDecoration(labelText: 'Name')),
-            TextField(controller: emailController, decoration: InputDecoration(labelText: 'Email')),
-            TextField(controller: branchController, decoration: InputDecoration(labelText: 'Branch')),
-            // Optional: Add password field if needed
-          ],
+    builder: (ctx) => StatefulBuilder(
+      builder: (ctx, setState) => AlertDialog(
+        title: Text('Edit User Information', style: TextStyle(color:  Color.fromARGB(255, 114, 26, 20), fontWeight: FontWeight.bold),),
+        content: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  labelStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                ),
+              ),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                ),
+              ),
+              TextField(
+                controller: branchController,
+                decoration: InputDecoration(
+                  labelText: 'Branch',
+                  labelStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                ),
+              ),
+              DropdownButtonFormField<String>(
+                value: selectedRole,
+                items: roles.map((r) => DropdownMenuItem(
+                  value: r,
+                  child: Text(r, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                )).toList(),
+                onChanged: (value) => setState(() => selectedRole = value!),
+                decoration: InputDecoration(
+                  labelText: 'Role',
+                  labelStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text('Cancel',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 114, 26, 20),),),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text('Save',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 114, 26, 20),),),
+          ),
+        ],
       ),
-      actions: [
-        TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text('Cancel')),
-        ElevatedButton(onPressed: () => Navigator.of(ctx).pop(true), child: Text('Save')),
-      ],
     ),
   );
-
   if (shouldSave != true) return;
-
   // Update Firestore
   try {
     await FirebaseFirestore.instance.collection('users').doc(uid).update({
       'name': nameController.text.trim(),
       'email': emailController.text.trim(),
       'branch': branchController.text.trim(),
+      'role': selectedRole, 
     });
-
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('✅ User info updated')),
+      SnackBar(content: Text('✅ User info updated',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 255, 255, 255),),)),
     );
   } catch (e) {
-    print('Error updating user: $e');
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('❌ Failed to update user')),
+      SnackBar(content: Text('❌ Failed to update user',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 255, 255, 255),),)),
     );
   }
 }
-
-

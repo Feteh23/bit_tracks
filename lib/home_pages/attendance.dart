@@ -13,7 +13,7 @@ class Attendance extends StatefulWidget {
 class _AttendanceState extends State<Attendance> {
   DateTime _focusedDay = DateTime.now();       // Current view on the calendar
   DateTime? _selectedDay;                      // Day selected by the user
-
+  
 void _openAttendanceModal(BuildContext context, DateTime date) {
   String description = '';
   bool isPresent = true;
@@ -29,7 +29,7 @@ void _openAttendanceModal(BuildContext context, DateTime date) {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SwitchListTile(
-                  title: Text(isPresent ? 'Present' : 'Absent'),
+                  title: Text(isPresent ? 'Present' : 'Absent', style: TextStyle(fontWeight: FontWeight.bold),),
                   value: isPresent,
                   onChanged: (val) {
                     setModalState(() {
@@ -38,7 +38,7 @@ void _openAttendanceModal(BuildContext context, DateTime date) {
                   },
                 ),
                 TextField(
-                  decoration: InputDecoration(labelText: 'Description'),
+                  decoration: InputDecoration(labelText: 'Description', labelStyle: TextStyle(fontWeight: FontWeight.bold)),
                   onChanged: (val) {
                     description = val;
                   },
@@ -49,7 +49,7 @@ void _openAttendanceModal(BuildContext context, DateTime date) {
         ),
         actions: [
           TextButton(
-            child: Text('Save'),
+            child: Text('Save', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent, fontSize: 18),),
            onPressed: () {
   _saveAttendance(date, isPresent, description);
   Navigator.of(context).pop();
@@ -63,12 +63,13 @@ void _openAttendanceModal(BuildContext context, DateTime date) {
 }
 
 Map<String, double> attendanceData = {
-  "Present": 80,
-  "Absent": 20,
+  "Present": 00,
+  "Absent": 100,
 };
 void _updatePieChartData() {
-  int presentCount = attendanceRecords.values.where((v) => v).length;
-  int absentCount = attendanceRecords.values.where((v) => !v).length;
+int presentCount = attendanceRecords.values.where((v) => v.isPresent).length;
+int absentCount = attendanceRecords.values.where((v) => !v.isPresent).length;
+
   int total = presentCount + absentCount;
 
   setState(() {
@@ -79,14 +80,26 @@ void _updatePieChartData() {
   });
 }
 
-Map<DateTime, bool> attendanceRecords = {};
+Map<DateTime, AttendanceEntry> attendanceRecords = {};
+
 void _saveAttendance(DateTime date, bool isPresent, String description) {
+  DateTime key = DateTime(date.year, date.month, date.day);
+  if (attendanceRecords.containsKey(key)) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Attendance already marked for today.", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        backgroundColor: const Color.fromARGB(255, 72, 74, 75),
+      ),
+    );
+    return;
+  }
+
   setState(() {
-    attendanceRecords[DateTime(date.year, date.month, date.day)] = isPresent;
+    attendanceRecords[key] = AttendanceEntry(isPresent: isPresent, description: description);
     _updatePieChartData();
   });
-  print('Saved: $date, Present: $isPresent, Note: $description');
 }
+
 
 
   @override
@@ -128,45 +141,6 @@ body: Column(
       SizedBox(
         height: 25,
       ),
-      Padding(
-        padding: const EdgeInsets.only(left: 15),
-        child: Container(
-          height: 40,
-          width: 350,
-          decoration: BoxDecoration(
-            border: Border.all(
-        color: const Color.fromARGB(255, 100, 99, 99),
-        width: 1,
-            ),
-            borderRadius: BorderRadius.circular(25),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 15),
-            child: Row(
-        children: [
-          Icon(Icons.search, color: const Color.fromARGB(255, 100, 99, 99)),
-          SizedBox(width: 10),
-          Expanded(
-            child: TextField(
-              style: TextStyle(
-                color: const Color.fromARGB(255, 100, 99, 99),
-                fontWeight: FontWeight.bold,
-              ),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: "search here.....",
-                hintStyle: TextStyle(
-                  color: const Color.fromARGB(255, 175, 173, 173),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
-            ),
-          ),
-        ),
-      ),
       SizedBox(height: 35,),
       Padding(
         padding: const EdgeInsets.only(left: 15),
@@ -181,16 +155,41 @@ body: Column(
             )
           ),
           child: TableCalendar(
+            calendarStyle: CalendarStyle(
+  todayDecoration: BoxDecoration(
+    color: Colors.deepPurpleAccent,
+    shape: BoxShape.circle,
+  ),
+  selectedDecoration: BoxDecoration(
+    color: const Color.fromRGBO(255, 186, 96, 1),
+    shape: BoxShape.circle,
+  ),
+),
+
             firstDay: DateTime.utc(2020, 1, 1),
             lastDay: DateTime.utc(2030, 12, 31),
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
             onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-          _selectedDay = selectedDay;
-          _focusedDay = focusedDay;
-              });
-              _openAttendanceModal(context, selectedDay);
+             DateTime today = DateTime.now();
+  DateTime currentDate = DateTime(today.year, today.month, today.day);
+  DateTime selectedDate = DateTime(selectedDay.year, selectedDay.month, selectedDay.day);
+  
+  if (selectedDate == currentDate) {
+    setState(() {
+      _selectedDay = selectedDay;
+      _focusedDay = focusedDay;
+    });
+    _openAttendanceModal(context, selectedDay);
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("You can only mark attendance for today.", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+        backgroundColor: const Color.fromARGB(255, 77, 74, 74),
+      ),
+    );
+  }
+
             },
           ),
         ),
@@ -209,7 +208,7 @@ PieChart(
   dataMap: attendanceData,
   animationDuration: Duration(milliseconds: 800),
   chartRadius: MediaQuery.of(context).size.width / 2.2,
-  colorList: [const Color.fromARGB(255, 100, 99, 99), const Color.fromARGB(255, 114, 26, 20)],
+  colorList: [const Color.fromARGB(255, 120, 120, 190), const Color.fromARGB(255, 199, 26, 14)],
   chartType: ChartType.disc,
   legendOptions: LegendOptions(
     showLegends: true,
@@ -222,10 +221,66 @@ PieChart(
     chartValueStyle: TextStyle(fontWeight: FontWeight.bold),
   ),
 ),
+SizedBox(height: 25,),
+ElevatedButton(
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 114, 26, 20),
+    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+  ),
+  onPressed: () {
+    _showAttendanceHistory(context);
+  },
+  child: Text("View Attendance History", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+),
+
 
   ],
 ),
 
     );
   }
+}
+class AttendanceEntry {
+  final bool isPresent;
+  final String description;
+  AttendanceEntry({required this.isPresent, required this.description});
+}
+Map<DateTime, AttendanceEntry> attendanceRecords = {};
+void _showAttendanceHistory(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) {
+      List<MapEntry<DateTime, AttendanceEntry>> sortedEntries = attendanceRecords.entries.toList()
+        ..sort((a, b) => b.key.compareTo(a.key)); // Sort by date descending
+
+      return Container(
+        padding: EdgeInsets.all(16),
+        height: 400,
+        child: Column(
+          children: [
+            Text("Attendance History", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: sortedEntries.length,
+                itemBuilder: (context, index) {
+                  final entry = sortedEntries[index];
+                  final dateStr = "${entry.key.year}-${entry.key.month.toString().padLeft(2, '0')}-${entry.key.day.toString().padLeft(2, '0')}";
+                  return ListTile(
+                    leading: Icon(entry.value.isPresent ? Icons.check_circle : Icons.cancel,
+                        color: entry.value.isPresent ? Colors.green : Colors.red),
+                    title: Text(dateStr, style: TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text(entry.value.description.isEmpty ? "No description" : entry.value.description),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }
