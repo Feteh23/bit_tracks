@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
 
 class Taskpage extends StatelessWidget {
   const Taskpage({super.key});
@@ -46,7 +44,7 @@ body: SingleChildScrollView(
         height: 35,
       ),
       Padding(
-        padding: const EdgeInsets.only(left: 25),
+        padding: const EdgeInsets.only(left: 25, right: 25),
         child: Column(
           children: [
             Row(
@@ -61,9 +59,19 @@ body: SingleChildScrollView(
         ),
          Row(
           children: [
-            Icon(Icons.calendar_month_outlined, size: 25, color: const Color.fromARGB(255, 114, 26, 20),),
+            Icon(Icons.start_outlined, size: 25, color: const Color.fromARGB(255, 114, 26, 20),),
             SizedBox(width: 15,),
-            Text('Due: Aug 25, 2025', style: TextStyle( fontSize: 19),)
+            Text('start:Aug 17, 2025' , style: TextStyle( fontSize: 19),)
+          ],
+        ),
+           SizedBox(
+          height: 15,
+        ),
+         Row(
+          children: [
+            Icon(Icons.stop_circle_outlined, size: 25, color: const Color.fromARGB(255, 114, 26, 20),),
+            SizedBox(width: 15,),
+            Text('Due: Aug 23, 2025', style: TextStyle( fontSize: 19),)
           ],
         ),
          SizedBox(
@@ -71,9 +79,14 @@ body: SingleChildScrollView(
         ),
          Row(
           children: [
-            Icon(Icons.picture_as_pdf_outlined, size: 25, color: const Color.fromARGB(255, 114, 26, 20),),
+            Icon(Icons.description_outlined, size: 25, color: const Color.fromARGB(255, 114, 26, 20),),
             SizedBox(width: 15,),
-            Text('e_commerce.pdf', style: TextStyle( fontSize: 19),)
+            Expanded(
+              child: Text('Design an ecommerce website, where a user can buy iterms online.', style: TextStyle( fontSize: 19),
+              softWrap: true,
+              overflow: TextOverflow.visible,
+              ),
+            )
           ],
         ),
           ],
@@ -107,60 +120,6 @@ body: SingleChildScrollView(
        ),
                ),
                SizedBox(height: 30),
-  
-  Row(
-  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  children: [
-    Column(
-      children: [
-        IconButton(
-          icon: Icon(Icons.camera_alt, size: 30),
-          onPressed: () async {
-  final ImagePicker picker = ImagePicker();
-  final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-
-  if (image != null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Selected Image: ${image.name}')),
-    );
-    // You can also preview or upload the image here
-  }
-},
-
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        Text('Upload Image'),
-      ],
-    ),
-    SizedBox(height: 20,),
-    Column(
-      children: [
-        IconButton(
-          icon: Icon(Icons.picture_as_pdf, size: 30),
-         onPressed: () async {
-  FilePickerResult? result = await FilePicker.platform.pickFiles(
-    type: FileType.custom,
-    allowedExtensions: ['pdf'],
-  );
-
-  if (result != null && result.files.single.path != null) {
-    final fileName = result.files.single.name;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Selected PDF: $fileName')),
-    );
-    // You can preview or upload the PDF here
-  }
-},
-
-        ),
-        SizedBox(height: 20),
-        Text('Upload PDF'),
-      ],
-    ),
-  ],
-  ),
   
   SizedBox(height: 35),
   
@@ -175,12 +134,20 @@ body: SingleChildScrollView(
     foregroundColor: Colors.white,
   ),
   ),
-  
+  SizedBox(
+        height: 30,
+      ),
+  Divider(
+    thickness: 2,
+    color: Color.fromARGB(255, 114, 26, 20),
+    indent: 15,
+    endIndent: 15,
+  ),
     SizedBox(
-        height: 45,
+        height: 30,
       ),
       Padding(
-        padding: const EdgeInsets.only(left: 25),
+        padding: const EdgeInsets.only(left: 15, right: 15),
         child: Column(
           children: [
             Row(
@@ -190,14 +157,25 @@ body: SingleChildScrollView(
                 Text('Design a potfolio', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),)
               ],
             ),
-              SizedBox(
+            
+         SizedBox(
           height: 15,
         ),
          Row(
           children: [
-            Icon(Icons.calendar_month_outlined, size: 25, color: const Color.fromARGB(255, 114, 26, 20),),
+            Icon(Icons.start_outlined, size: 25, color: const Color.fromARGB(255, 114, 26, 20),),
             SizedBox(width: 15,),
-            Text('Due: Aug 15, 2025', style: TextStyle( fontSize: 19),)
+            Text('start:Aug 17, 2025' , style: TextStyle( fontSize: 19),)
+          ],
+        ),
+           SizedBox(
+          height: 15,
+        ),
+         Row(
+          children: [
+            Icon(Icons.stop_circle_outlined, size: 25, color: const Color.fromARGB(255, 114, 26, 20),),
+            SizedBox(width: 15,),
+            Text('Due: Aug 23, 2025', style: TextStyle( fontSize: 19),)
           ],
         ),
          SizedBox(
@@ -205,9 +183,14 @@ body: SingleChildScrollView(
         ),
          Row(
           children: [
-            Icon(Icons.picture_in_picture_outlined, size: 25, color: const Color.fromARGB(255, 114, 26, 20),),
+            Icon(Icons.description_outlined, size: 25, color: const Color.fromARGB(255, 114, 26, 20),),
             SizedBox(width: 15,),
-            Text('potfolio.jpg', style: TextStyle( fontSize: 19),)
+            Expanded(
+              child: Text('Design a potfolio, where a user can upload their images as profile.', style: TextStyle( fontSize: 19),
+              softWrap: true,
+              overflow: TextOverflow.visible,
+              ),
+            )
           ],
         ),
           ],
@@ -241,39 +224,6 @@ body: SingleChildScrollView(
        ),
                ),
                SizedBox(height: 30),
-  
-  Row(
-  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  children: [
-    Column(
-      children: [
-        IconButton(
-          icon: Icon(Icons.camera_alt, size: 30),
-          onPressed: () {
-            
-          },
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        Text('Upload Image'),
-      ],
-    ),
-    SizedBox(height: 20,),
-    Column(
-      children: [
-        IconButton(
-          icon: Icon(Icons.picture_as_pdf, size: 30),
-          onPressed: () {
-            
-          },
-        ),
-        SizedBox(height: 20),
-        Text('Upload PDF'),
-      ],
-    ),
-  ],
-  ),
   
   SizedBox(height: 35),
   

@@ -3,6 +3,8 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:intern_system/login_pages/reset_password.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 class SupervisorProfile extends StatefulWidget {
   const SupervisorProfile({super.key});
 
@@ -11,10 +13,62 @@ class SupervisorProfile extends StatefulWidget {
 }
 
 class _SupervisorProfileState extends State<SupervisorProfile> {
-  bool _ischecked = false;
-    final ImagePicker _picker = ImagePicker();
+  Map<String, dynamic>? _adminData;
+final TextEditingController _emailController = TextEditingController();
+
+  final ImagePicker _picker = ImagePicker();
   XFile? _imageFile;
-  void _openGallery() async {
+Future<void> _loadSupervisorData() async {
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid == null) return;
+
+  final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+  if (doc.exists) {
+    setState(() {
+      _adminData = doc.data();
+      _emailController.text = _adminData?['email'] ?? '';
+    });
+  }
+}
+@override
+void initState() {
+  super.initState();
+  _loadSupervisorData();
+}
+void _editField(String field, String? currentValue) {
+  final controller = TextEditingController(text: currentValue ?? '');
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text('Edit $field'),
+      content: TextField(
+        controller: controller,
+        decoration: InputDecoration(hintText: 'Enter new $field'),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            final uid = FirebaseAuth.instance.currentUser?.uid;
+            if (uid != null) {
+              await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(uid)
+                  .update({field: controller.text});
+              Navigator.pop(context);
+              _loadSupervisorData(); // refresh UI
+            }
+          },
+          child: Text('Save'),
+        ),
+      ],
+    ),
+  );
+}
+void _openGallery() async {
   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
   if (image != null) {
     setState(() {
@@ -22,6 +76,7 @@ class _SupervisorProfileState extends State<SupervisorProfile> {
     });
   }
 }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,101 +156,74 @@ body: Column(
         ),
       ],
     ),
-    Center(child: Text("Mr Nchi Marcnus", style: TextStyle(color: const Color.fromARGB(255, 107, 106, 106),fontSize:20, fontWeight: FontWeight.bold),)),
-    Center(child: Text("Networking", style: TextStyle(color: const Color.fromARGB(255, 107, 106, 106),fontSize:22, fontWeight: FontWeight.bold),)),
-    SizedBox(height: 40,),
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30),
-            child: Text('Email', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
-          )),
-        Container(
-        height: 50,
-          width: 350,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: const Color.fromARGB(255, 100, 99, 99),
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(5),
-          ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 25),
-            child: TextField(
-              style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
-                hintText: 'nchimarcnus@gmail.com',
-                border: InputBorder.none,
-                 hintStyle: TextStyle(color: const Color.fromARGB(255, 172, 172, 172), fontWeight: FontWeight.bold)
-              ),
-            ),
-          ),
-        ),
-        ),
- SizedBox(height: 15,),
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30),
-            child: Text('Password', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
-          )),
+ Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Text(
+      _adminData?['name'] ?? 'Loading...',
+      style: TextStyle(
+        color: Color.fromARGB(255, 107, 106, 106),
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+     SizedBox(width:  65,),
+    IconButton(
+      icon: Icon(Icons.edit, color: Colors.grey),
+      onPressed: () => _editField('name', _adminData?['name']),
+    ),
+  ],
+),
 
-     Row(
-       children: [
-        SizedBox(
-          width: 25,
-        ),
-         Padding(
-           padding: const EdgeInsets.only(left: 5),
-           child: Container(
-            height: 50,
-            width: 350,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color.fromARGB(255, 100, 99, 99),
-                width: 1,
-              ),
-              borderRadius: BorderRadius.circular(5),
-            ),
-                child:    Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 4, left: 10),
-                    child: TextField(
-                      style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
-                      obscureText: _ischecked,
-                      decoration: InputDecoration(
-                         border: InputBorder.none,
-                         hintText: "....................",
-                         hintStyle: TextStyle(color: const Color.fromARGB(255, 185, 181, 181), fontWeight: FontWeight.bold)
-                      ),
-                    ),
-                  ),
-                ),
-                 SizedBox(width: 100,),
-                    IconButton(onPressed: (){
-                      setState(() {
-                        _ischecked = !_ischecked;
-                      });
-                    }, icon: Icon(_ischecked? Icons.visibility_off : Icons.visibility, color: const Color.fromARGB(255, 100, 99, 99),)),
-              ],
-            ),
-               ),
-         ),
-       ],
-     ),
+Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Text(
+      _adminData?['branch'] ?? '',
+      style: TextStyle(
+        color: Color.fromARGB(255, 107, 106, 106),
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    SizedBox(width:  65,),
+    IconButton(
+      icon: Icon(Icons.edit, color: Colors.grey),
+      onPressed: () => _editField('branch', _adminData?['branch']),
+    ),
+  ],
+),
+
+    SizedBox(height: 40,),
+       
+       Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Text(
+      _adminData?['email'] ?? 'Loading...',
+      style: TextStyle(
+        color: Color.fromARGB(255, 100, 99, 99),
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+      ),
+    ),
+    IconButton(
+      icon: Icon(Icons.edit, color: Colors.grey),
+      onPressed: () => _editField('email', _adminData?['email']),
+    ),
+  ],
+),
+
+      SizedBox(height: 45,),
+     SizedBox(height: 15,),
       SizedBox(height: 45,),
      Container(
   height: 50,
   width: 350,
   decoration: BoxDecoration(
-    color: const Color.fromARGB(255, 100, 99, 99),
+    color: const Color.fromARGB(255, 254, 254, 254),
     border: Border.all(
-      color: Color.fromARGB(255, 100, 99, 99),
+      color: Color.fromARGB(255, 135, 5, 2),
       width: 1,
     ),
     borderRadius: BorderRadius.circular(5),
@@ -204,23 +232,26 @@ body: Column(
     padding: const EdgeInsets.only(top: 4, left: 10),
     child: Align(
       child: TextButton(onPressed: (){},
-        child: Center(child: Text('save', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20),)),
+        child: Center(child: Text('log out', style: TextStyle(fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 248, 45, 45), fontSize: 20),)),
         
       ),
     ),
   ),
 ),
+SizedBox(
+  height: 15,
+),
  TextButton(onPressed: (){
                       Navigator.push(context,
                       MaterialPageRoute(
-                        builder: (BuildContext context) => ResetPassword(),
+                        builder: (BuildContext context) =>ResetPassword(),
                       ));
         },
         child:  Align(
 alignment: Alignment.topRight,
           child: Padding(
             padding: const EdgeInsets.only(right: 25),
-            child: Text('Change Password?', textAlign: TextAlign.right, style: TextStyle(color: const Color.fromARGB(255, 114, 26, 20),fontWeight: FontWeight.bold),),
+            child: Text('Change Password?', textAlign: TextAlign.right, style: TextStyle(color: const Color.fromARGB(255, 114, 26, 20),fontWeight: FontWeight.bold, fontSize: 18),),
           )),
         
       ),
