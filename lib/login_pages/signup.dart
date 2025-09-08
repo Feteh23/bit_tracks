@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -14,6 +16,7 @@ class _SignupState extends State<Signup> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final branchController = TextEditingController();
+  final phoneController = TextEditingController();
   String selectedRole = 'intern'; // default role
   bool _ischecked = true; 
 
@@ -51,9 +54,12 @@ class _SignupState extends State<Signup> {
 
   @override
   Widget build(BuildContext context) {
+     final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
     return   Scaffold(
+      backgroundColor: AppColors.backgroundColor,
 appBar: AppBar(
-  backgroundColor: const Color.fromARGB(255, 114, 26, 20),
+  backgroundColor: AppColors.primaryColor,
   leading:
   IconButton(
     icon: Icon(Icons.arrow_back, color: Colors.white,),
@@ -64,12 +70,7 @@ appBar: AppBar(
 
   title: Align(
     child: Text(
-      "Bit Tracks SignUp",
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
+      "Bit Tracks SignUp",style: TextStyle(fontSize: screenWidth * 0.05,fontWeight: FontWeight.bold,color: Colors.white,),
       textAlign: TextAlign.center,
     ),
   ),
@@ -84,262 +85,124 @@ appBar: AppBar(
 
 ),
 
-body: Column(
-  children: [
-    SizedBox(
-      height: 20,
-    ),
-     Image.asset(
-    'assets/typing_girl.jpg',
-     fit: BoxFit.cover,
-          ),
-           SizedBox(height: 25,),
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30),
-            child: Text('Name', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
-          )),
-
-     Row(
-       children: [
+body: Padding(
+  padding: const EdgeInsets.only(left: 25, right: 25),
+  child: SingleChildScrollView(
+    scrollDirection: Axis.vertical,
+    child: Column(
+      children: [
         SizedBox(
-          width: 25,
+          height: screenHeight * 0.05,
         ),
-         Padding(
-           padding: const EdgeInsets.only(left: 5),
-           child: Container(
-            height: 50,
-            width: 350,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color.fromARGB(255, 100, 99, 99),
-                width: 1,
+         Image.asset(
+        'assets/typing_girl.jpg',
+         fit: BoxFit.cover,
+         height: screenHeight * 0.3,
+         width: screenWidth * 0.85,
               ),
-              borderRadius: BorderRadius.circular(5),
-            ),
-                child:    Expanded(
-                  child: Padding(
-           padding: const EdgeInsets.only(top: 4, left: 10),
-           child: TextField(
-             style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
-             controller: nameController,
-             decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: "Feteh Mireille",
-                hintStyle: TextStyle(color: const Color.fromARGB(255, 192, 190, 190), fontWeight: FontWeight.bold)
-             ),
-           ),
-                  ),
-                ),
+               SizedBox(height: screenHeight * 0.02,),
+               LabeledTextField(
+                 labelText: 'Name',
+                 hintText: 'Enter your name',
+                 controller: nameController,
                ),
-         ),
-       ],
-     ),
-       Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30),
-            child: Text('Email', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
-          )),
-
-     Row(
-       children: [
-        SizedBox(
-          width: 25,
-        ),
-         Padding(
-           padding: const EdgeInsets.only(left: 5),
-           child: Container(
-            height: 50,
-            width: 350,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color.fromARGB(255, 100, 99, 99),
-                width: 1,
-              ),
-              borderRadius: BorderRadius.circular(5),
-            ),
-                child:    Expanded(
-                  child: Padding(
-           padding: const EdgeInsets.only(top: 4, left: 10),
-           child: TextField(
-             style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
-              controller: emailController,
-             decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: "fetehmireillelareine@gmail.com",
-                hintStyle: TextStyle(color: const Color.fromARGB(255, 175, 173, 173), fontWeight: FontWeight.bold)
-             ),
-           ),
-                  ),
-                ),
+                SizedBox(height: screenHeight * 0.02,),
+               LabeledTextField(
+                 labelText: 'Email',
+                 hintText: 'Enter your email',
+                 controller: emailController,
                ),
-         ),
-       ],
-     ),
-      SizedBox(height: 5,),
-
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30),
-            child: Text('Password', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
-          )),
-
-     Row(
-       children: [
-        SizedBox(
-          width: 25,
-        ),
-         Padding(
-           padding: const EdgeInsets.only(left: 5),
-           child: Container(
-            height: 50,
-            width: 350,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color.fromARGB(255, 100, 99, 99),
-                width: 1,
-              ),
-              borderRadius: BorderRadius.circular(5),
-            ),
-                child:    Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 4, left: 10),
-                    child: TextField(
-                      style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
-                      obscureText: _ischecked,
-                       controller: passwordController,
-                      decoration: InputDecoration(
-                         border: InputBorder.none,
-                         hintText: "....................",
-                         hintStyle: TextStyle(color: const Color.fromARGB(255, 188, 187, 187), fontWeight: FontWeight.bold)
-                      ),
-                    ),
-                  ),
-                ),
-                 SizedBox(width: 100,),
-                    IconButton(onPressed: (){
+                SizedBox(height: screenHeight * 0.02,),
+                LabeledTextField(
+                  labelText: 'Password',
+                  hintText: 'Enter your password',
+                  obscureText: _ischecked,
+                  controller: passwordController,
+                  suffixIcon: IconButton(
+                    icon: Icon(_ischecked ? Icons.visibility_off : Icons.visibility),
+                    onPressed: () {
                       setState(() {
                         _ischecked = !_ischecked;
                       });
-                    }, icon: Icon(_ischecked? Icons.visibility_off : Icons.visibility, color: const Color.fromARGB(255, 100, 99, 99),)),
-              ],
-            ),
-               ),
-         ),
-       ],
-     ),
-     SizedBox(
-      height: 5,
-     ),
-      SizedBox(height: 5,),
-       Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30),
-            child: Text('Branch', style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontSize: 20, fontWeight: FontWeight.bold),),
-          )),
-
-     Row(
-       children: [
-        SizedBox(
-          width: 25,
-        ),
-         Padding(
-           padding: const EdgeInsets.only(left: 5),
-           child: Container(
-            height: 50,
-            width: 350,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color.fromARGB(255, 100, 99, 99),
-                width: 1,
-              ),
-              borderRadius: BorderRadius.circular(5),
-            ),
-                child:    Expanded(
-                  child: Padding(
-           padding: const EdgeInsets.only(top: 4, left: 10),
-           child: TextField(
-             style: TextStyle(color: const Color.fromARGB(255, 100, 99, 99), fontWeight: FontWeight.bold),
-             controller: branchController,
-             decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: "Software engineering",
-                hintStyle: TextStyle(color: const Color.fromARGB(255, 177, 177, 177), fontWeight: FontWeight.bold)
-             ),
-           ),
+                    },
                   ),
                 ),
-               ),
+                 SizedBox(height: screenHeight * 0.02,),
+                LabeledTextField(
+                 labelText: 'Number',
+                 hintText: 'Enter your number',
+                controller: phoneController,
+                keyboardType: TextInputType.phone,
+                ),
+                  SizedBox(height: screenHeight * 0.02,),
+          LabeledTextField(
+            labelText: 'Branch',
+            hintText: 'Enter your branch',
+            controller: branchController,
+          ),
+         SizedBox(
+          height: screenHeight * 0.022,
          ),
-       ],
-     ),
-     SizedBox(
-      height:10,
-     ),
-    Container(
-  height: 50,
-  width: 350,
-  decoration: BoxDecoration(
-    color: const Color.fromARGB(255, 100, 99, 99),
-    border: Border.all(
-      color: Color.fromARGB(255, 100, 99, 99),
-      width: 1,
+        Container(
+      height: screenHeight * 0.06,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.secondaryColor,
+        border: Border.all(
+          color: AppColors.secondaryColor,
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 4, left: 10),
+        child: Align(
+          child: TextButton(
+      onPressed: () async {
+        try {
+          final userCredential = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim(),
+          );
+    
+          final uid = userCredential.user!.uid;
+    
+          await FirebaseFirestore.instance.collection('users').doc(uid).set({
+            'name': nameController.text.trim(),
+            'email': emailController.text.trim(),
+            'branch': branchController.text.trim(),
+            'role': selectedRole,
+          });
+    
+          // Navigate based on role
+          if (selectedRole == 'admin') {
+            Navigator.pushReplacementNamed(context, '/adminDashboard');
+          } else if (selectedRole == 'supervisor') {
+            Navigator.pushReplacementNamed(context, '/supervisorDashboard');
+          } else {
+            Navigator.pushReplacementNamed(context, '/internDashboard');
+          }
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Signup failed: ${e.toString()}')),
+          );
+        }
+      },
+      child: Center(
+        child: Text(
+          'SignUp',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: screenWidth * 0.05),
+        ),
+      ),
+    )
+    
+        ),
+      ),
     ),
-    borderRadius: BorderRadius.circular(5),
-  ),
-  child: Padding(
-    padding: const EdgeInsets.only(top: 4, left: 10),
-    child: Align(
-      child: TextButton(
-  onPressed: () async {
-    try {
-      final userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-
-      final uid = userCredential.user!.uid;
-
-      await FirebaseFirestore.instance.collection('users').doc(uid).set({
-        'name': nameController.text.trim(),
-        'email': emailController.text.trim(),
-        'branch': branchController.text.trim(),
-        'role': selectedRole,
-      });
-
-      // Navigate based on role
-      if (selectedRole == 'admin') {
-        Navigator.pushReplacementNamed(context, '/adminDashboard');
-      } else if (selectedRole == 'supervisor') {
-        Navigator.pushReplacementNamed(context, '/supervisorDashboard');
-      } else {
-        Navigator.pushReplacementNamed(context, '/internDashboard');
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Signup failed: ${e.toString()}')),
-      );
-    }
-  },
-  child: Center(
-    child: Text(
-      'SignUp',
-      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20),
+      ],
     ),
   ),
-)
-
-    ),
-  ),
-),
-  ],
 ),
 
     );

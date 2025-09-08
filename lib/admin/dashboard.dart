@@ -25,7 +25,10 @@ class _AdminDashboarState extends State<AdminDashboar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       body: _pages[_currentIndex],
+       body: AnimatedSwitcher(
+         duration: const Duration(milliseconds: 200),
+         child: _pages[_currentIndex],
+       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color.fromARGB(255, 114, 26, 20),
         onTap: NavigateBottomBar,
@@ -43,9 +46,9 @@ class _AdminDashboarState extends State<AdminDashboar> {
   ),
 
         items: [
-          BottomNavigationBarItem(icon: CircleAvatar(child: Icon(Icons.home, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'Home'  ),
-          BottomNavigationBarItem(icon: CircleAvatar(child: Icon(Icons.person, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'Profile'),
-          BottomNavigationBarItem(icon: CircleAvatar(child: Icon(Icons.supervisor_account, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'pair user'),
+          BottomNavigationBarItem(icon: CircleAvatar( backgroundColor: Colors.white, child: Icon(Icons.home, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'Home'  ),
+          BottomNavigationBarItem(icon: CircleAvatar( backgroundColor: Colors.white, child: Icon(Icons.person, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'Profile'),
+          BottomNavigationBarItem(icon: CircleAvatar( backgroundColor: Colors.white, child: Icon(Icons.supervisor_account, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'pair user'),
         ]),
 
     );

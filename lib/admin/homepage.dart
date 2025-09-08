@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
 
 class AdminHomepage extends StatefulWidget {
   const AdminHomepage({super.key});
@@ -8,9 +9,11 @@ class AdminHomepage extends StatefulWidget {
   State<AdminHomepage> createState() => _AdminHomepageState();
 }
 class _AdminHomepageState extends State<AdminHomepage> {
+    bool _isPasswordHidden = true;
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   String selectedRole = 'intern';
   final roles = ['intern', 'supervisor', 'admin'];
   Future<void> createUser() async {
@@ -44,18 +47,11 @@ class _AdminHomepageState extends State<AdminHomepage> {
   await docRef.delete();
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content: Text('User deleted', style: TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-    ),),
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () async {
+content: Text('User deleted', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,),),
+      action: SnackBarAction(label: 'Undo',onPressed: () async {
           await FirebaseFirestore.instance.collection('users').doc(uid).set(userData!);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('User restored', style: TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
+            SnackBar(content: Text('User restored', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,
     ),)),
           );
         },
@@ -66,25 +62,23 @@ class _AdminHomepageState extends State<AdminHomepage> {
 }
   @override
   Widget build(BuildContext context) {
+     final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
+
       return DefaultTabController(
       length: 3,
       child: Scaffold(
+        backgroundColor: AppColors.backgroundColor,
           appBar: PreferredSize(
              preferredSize: Size.fromHeight(150.0),
             child: AppBar(
-              backgroundColor: const Color.fromARGB(255, 114, 26, 20),
+              backgroundColor: AppColors.primaryColor,
             leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
               title: Align(
-                child: Text(
-                  'Admin Dashboard',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                child: Text('Admin Dashboard',style: TextStyle(fontSize: screenWidth * 0.05,fontWeight: FontWeight.bold,color: Colors.white,),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -92,7 +86,6 @@ class _AdminHomepageState extends State<AdminHomepage> {
                 IconButton(
                   icon: Icon(Icons.book_online_outlined, color: Colors.white),
                   onPressed: () {
-                    // Add your action here
                   },
                 ),
               ],
@@ -104,11 +97,11 @@ class _AdminHomepageState extends State<AdminHomepage> {
              ],
               labelColor: Colors.white, 
               unselectedLabelColor: Colors.white70, 
-              labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              unselectedLabelStyle: TextStyle(fontSize: 14),
+              labelStyle: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.bold),
+              unselectedLabelStyle: TextStyle(fontSize: screenWidth * 0.04),
               indicatorColor: Colors.white, 
               indicatorWeight: 4.0, 
-              indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
+              indicatorPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1),
               indicatorSize: TabBarIndicatorSize.label, 
             ),
             ),
@@ -116,121 +109,48 @@ class _AdminHomepageState extends State<AdminHomepage> {
         body: TabBarView(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
-              child: Column(
-                children: [
-                  TextField(controller: nameController,
-                    style: TextStyle( 
-    fontSize: 16,
-    color: Colors.black,
-    fontWeight: FontWeight.bold,
-  ),
-                   decoration: InputDecoration(
-                    labelText: 'Name',
-                    labelStyle: TextStyle( 
-      fontSize: 18,
-      color: Color.fromARGB(255, 114, 26, 20),
-      fontWeight: FontWeight.bold,
-    ),
- border: OutlineInputBorder(), 
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Color.fromARGB(255, 100, 99, 99), width: 2),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.grey.shade400),
-    ),
- hintText: 'Enter full name',
-    hintStyle: TextStyle(color: Colors.grey),
-                    )
+              padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                  StyledTextField(labelText: 'Name',hintText: 'Enter full name',controller: nameController, ),
+                    SizedBox(height: screenHeight * 0.02),
+                    StyledTextField(labelText: 'Email', hintText: 'Enter email', controller: emailController, keyboardType: TextInputType.emailAddress,),
+                    SizedBox(height: screenHeight * 0.02),
+                    StyledTextField(labelText: 'Phone', hintText: 'Enter phone number', controller: phoneController, keyboardType: TextInputType.phone,),
+                    SizedBox(height: screenHeight * 0.02),
+                    StyledTextField(labelText: 'Password',hintText: 'Enter password',controller: passwordController,obscureText: true,
+                      suffixIcon:  IconButton(
+                  icon: Icon(_isPasswordHidden ? Icons.visibility : Icons.visibility_off),
+                  onPressed: () => setState(() => _isPasswordHidden = !_isPasswordHidden),
+                ),
                     ),
-                    SizedBox(height: 25,),
-                  TextField(controller: emailController,
-                   style: TextStyle( 
-    fontSize: 16,
-    color: Colors.black,
-    fontWeight: FontWeight.bold,
-  ),
-                   decoration: InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: TextStyle( 
-      fontSize: 18,
-      color: Color.fromARGB(255, 114, 26, 20),
-      fontWeight: FontWeight.bold,
-    ),
-                    border: OutlineInputBorder(),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: const Color.fromARGB(255, 100, 99, 99))
+                       SizedBox(height: screenHeight * 0.02,),
+                    DropdownButtonFormField(
+                      value: selectedRole,
+                      items: roles.map((role) => DropdownMenuItem(value: role, child: Text(role, style: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.bold),))).toList(),
+                      onChanged: (value) => setState(() => selectedRole = value!),
+                      decoration: InputDecoration(
+                        labelText: 'Role', labelStyle: TextStyle( fontSize: screenWidth * 0.042,color: AppColors.primaryColor,fontWeight: FontWeight.bold,),
+                      ),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade400
-                      )
-                    ),
-                    hintText: 'Enter email',
-                     hintStyle: TextStyle(color: Colors.grey),
-                    ),
-                    ),
-                     SizedBox(height: 25,),
-                  TextField(controller: passwordController,
-                   style: TextStyle( 
-    fontSize: 16,
-    color: Colors.black,
-    fontWeight: FontWeight.bold,
-  ),
-                   decoration: InputDecoration(
-                    labelText: 'Password',
-                     labelStyle: TextStyle( 
-      fontSize: 18,
-      color: Color.fromARGB(255, 114, 26, 20),
-      fontWeight: FontWeight.bold,
-    ),
-    border: OutlineInputBorder(),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: const Color.fromARGB(255, 100, 99, 99))
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade400
-                      )
-                    ),
-                    hintText: 'Enter password',
-                     hintStyle: TextStyle(color: Colors.grey),
-                    ),
-                    ),
-                     SizedBox(height: 25,),
-                  DropdownButtonFormField(
-                    value: selectedRole,
-                    items: roles.map((role) => DropdownMenuItem(value: role, child: Text(role, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),))).toList(),
-                    onChanged: (value) => setState(() => selectedRole = value!),
-                    decoration: InputDecoration(
-                      labelText: 'Role', 
-                    labelStyle: TextStyle(
-                       fontSize: 25,
-      color: Color.fromARGB(255, 114, 26, 20),
-      fontWeight: FontWeight.bold,
-                    ),
+                    SizedBox(height: screenHeight * 0.03,),
+                  ElevatedButton(
+                  onPressed: createUser,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
+                    foregroundColor: Colors.white, 
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  SizedBox(height: 50),
-                ElevatedButton(
-  onPressed: createUser,
-  style: ElevatedButton.styleFrom(
-    backgroundColor: Color.fromARGB(255, 114, 26, 20), 
-    foregroundColor: Colors.white, 
-    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8),
-    ),
-  ),
-  child: Text(
-    'Create User',
-    style: TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-    ),
-  ),
-),
-                ],
+                  child: Text('Create User',style: TextStyle(fontSize: screenWidth * 0.04,fontWeight: FontWeight.bold,),
+                  ),
+                ),
+                  ],
+                ),
               ),
             ),
 
@@ -255,22 +175,30 @@ class _AdminHomepageState extends State<AdminHomepage> {
                     final uid = user.id;
                     final name = user['name'];
                     final email = user['email'];
+                    final number = user['number'] ?? 'N/A';
                     final role = user['role'];
 
                     return ListTile(
-                      title: Text('$name ($role)', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                      subtitle: Text(email, style: TextStyle(fontSize: 16),),
-                      trailing: Row(
+                      title: Text('$name  ($role)',style:  TextStyle(fontSize: screenWidth * 0.043, fontWeight: FontWeight.bold),),
+    subtitle: Column(
+       crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(number,style: TextStyle(fontSize: screenWidth * 0.041, fontWeight: FontWeight.bold),),
+        Text(email,style: TextStyle(fontSize: screenWidth * 0.04, color: Colors.grey[700],),),
+      ],
+    ),
+                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.edit, color: const Color.fromARGB(255, 100, 99, 99)),
+                            icon: Icon(Icons.edit, color: AppColors.secondaryColor),
                             onPressed: () {
                               showEditUserDialog(
                                 context,
                                 uid: user.id,
                                 name: user['name'],
                                 email: user['email'],
+                                number: user['number'] ?? '',
                                 branch: user['branch'] ?? '',
                                  role: user['role'] ?? 'intern',
                               );
@@ -320,11 +248,15 @@ Future<void> showEditUserDialog(
   required String uid,
   required String name,
   required String email,
+  required String number,
   required String branch,
   required String role, 
 }) async {
+    final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
   final nameController = TextEditingController(text: name);
   final emailController = TextEditingController(text: email);
+  final phoneController = TextEditingController(text: number);
   final branchController = TextEditingController(text: branch);
   String selectedRole = role;
   final roles = ['intern', 'supervisor', 'admin'];
@@ -332,7 +264,7 @@ Future<void> showEditUserDialog(
     context: context,
     builder: (ctx) => StatefulBuilder(
       builder: (ctx, setState) => AlertDialog(
-        title: Text('Edit User Information', style: TextStyle(color:  Color.fromARGB(255, 114, 26, 20), fontWeight: FontWeight.bold),),
+        title: Text('Edit User Information', style: TextStyle(color:  AppColors.primaryColor, fontWeight: FontWeight.bold),),
         content: SingleChildScrollView(
           child: Column(
             children: [
@@ -340,33 +272,45 @@ Future<void> showEditUserDialog(
                 controller: nameController,
                 decoration: InputDecoration(
                   labelText: 'Name',
-                  labelStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  labelStyle: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold),
                 ),
               ),
+              SizedBox(height: screenHeight * 0.01,),
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  labelStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  labelStyle: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold),
                 ),
               ),
+               SizedBox(height: screenHeight * 0.01,),
+               TextField(
+                controller: phoneController,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                  labelText: 'Phone',
+                  labelStyle: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold),
+                ),
+              ),
+               SizedBox(height: screenHeight * 0.01,),
               TextField(
                 controller: branchController,
                 decoration: InputDecoration(
                   labelText: 'Branch',
-                  labelStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  labelStyle: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold),
                 ),
               ),
+              
               DropdownButtonFormField<String>(
                 value: selectedRole,
                 items: roles.map((r) => DropdownMenuItem(
                   value: r,
-                  child: Text(r, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  child: Text(r, style: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold)),
                 )).toList(),
                 onChanged: (value) => setState(() => selectedRole = value!),
                 decoration: InputDecoration(
                   labelText: 'Role',
-                  labelStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  labelStyle: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold),
                 ),
               ),
             ],
@@ -375,11 +319,11 @@ Future<void> showEditUserDialog(
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text('Cancel',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 114, 26, 20),),),
+            child: Text('Cancel',style: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 114, 26, 20),),),
           ),
           ElevatedButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text('Save',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 114, 26, 20),),),
+            child: Text('Save',style: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 114, 26, 20),),),
           ),
         ],
       ),
@@ -395,11 +339,11 @@ Future<void> showEditUserDialog(
       'role': selectedRole, 
     });
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('✅ User info updated',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 255, 255, 255),),)),
+      SnackBar(content: Text('✅ User info updated',style: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 255, 255, 255),),)),
     );
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('❌ Failed to update user',style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 255, 255, 255),),)),
+      SnackBar(content: Text('❌ Failed to update user',style: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold, color:  Color.fromARGB(255, 255, 255, 255),),)),
     );
   }
 }

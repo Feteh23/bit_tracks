@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:pie_chart/pie_chart.dart';
 
@@ -21,6 +22,8 @@ void _openAttendanceModal(BuildContext context, DateTime date) {
   showDialog(
     context: context,
     builder: (context) {
+       final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
       return AlertDialog(
         title: Text('Attendance for ${date.toLocal().toString().split(' ')[0]}'),
         content: StatefulBuilder(
@@ -49,7 +52,7 @@ void _openAttendanceModal(BuildContext context, DateTime date) {
         ),
         actions: [
           TextButton(
-            child: Text('Save', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent, fontSize: 18),),
+            child: Text('Save', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent, fontSize: screenWidth * 0.04),),
            onPressed: () {
   _saveAttendance(date, isPresent, description);
   Navigator.of(context).pop();
@@ -63,8 +66,8 @@ void _openAttendanceModal(BuildContext context, DateTime date) {
 }
 
 Map<String, double> attendanceData = {
-  "Present": 00,
-  "Absent": 100,
+  "Present": 80,
+  "Absent": 20,
 };
 void _updatePieChartData() {
 int presentCount = attendanceRecords.values.where((v) => v.isPresent).length;
@@ -88,7 +91,7 @@ void _saveAttendance(DateTime date, bool isPresent, String description) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text("Attendance already marked for today.", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        backgroundColor: const Color.fromARGB(255, 72, 74, 75),
+        backgroundColor: AppColors.secondaryColor,
       ),
     );
     return;
@@ -104,9 +107,11 @@ void _saveAttendance(DateTime date, bool isPresent, String description) {
 
   @override
   Widget build(BuildContext context) {
+     final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
        appBar: AppBar(
-  backgroundColor: const Color.fromARGB(255, 114, 26, 20),
+  backgroundColor: AppColors.primaryColor,
   leading:
   IconButton(
     icon: Icon(Icons.arrow_back, color: Colors.white,),
@@ -119,7 +124,7 @@ void _saveAttendance(DateTime date, bool isPresent, String description) {
     child: Text(
       "Bit Tracks Attendance",
       style: TextStyle(
-        fontSize: 20,
+        fontSize: screenWidth * 0.05,
         fontWeight: FontWeight.bold,
         color: Colors.white,
       ),
@@ -139,18 +144,17 @@ void _saveAttendance(DateTime date, bool isPresent, String description) {
 body: Column(
   children: [
       SizedBox(
-        height: 25,
+        height: screenHeight * 0.04,
       ),
-      SizedBox(height: 35,),
       Padding(
         padding: const EdgeInsets.only(left: 15),
         child: Container(
-          height: 400,
-          width: 350,
+          height: screenHeight * 0.4,
+          width: screenWidth * 0.9,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: const Color.fromARGB(255, 100, 99, 99),
+              color: AppColors.secondaryColor,
                 width: 2,
             )
           ),
@@ -184,8 +188,8 @@ body: Column(
   } else {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("You can only mark attendance for today.", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-        backgroundColor: const Color.fromARGB(255, 77, 74, 74),
+        content: Text("You can only mark attendance for today.", style: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.bold),),
+        backgroundColor: AppColors.secondaryColor,
       ),
     );
   }
@@ -194,17 +198,17 @@ body: Column(
           ),
         ),
       ),
-SizedBox(height: 30),
-Text(
-  "Attendance Overview",
-  style: TextStyle(
-    fontSize: 22,
-    fontWeight: FontWeight.bold,
-    color: Color.fromARGB(255, 114, 26, 20),
-  ),
-),
-SizedBox(height: 30),
-PieChart(
+      SizedBox(height: screenHeight * 0.03,),
+      Text(
+        "Attendance Overview",
+        style: TextStyle(
+          fontSize: screenWidth * 0.05,
+          fontWeight: FontWeight.bold,
+          color: AppColors.primaryColor,
+        ),
+      ),
+      SizedBox(height: screenHeight * 0.03),
+      PieChart(
   dataMap: attendanceData,
   animationDuration: Duration(milliseconds: 800),
   chartRadius: MediaQuery.of(context).size.width / 2.2,
@@ -221,10 +225,10 @@ PieChart(
     chartValueStyle: TextStyle(fontWeight: FontWeight.bold),
   ),
 ),
-SizedBox(height: 25,),
+SizedBox(height: screenHeight * 0.03,),
 ElevatedButton(
   style: ElevatedButton.styleFrom(
-    backgroundColor: const Color.fromARGB(255, 114, 26, 20),
+    backgroundColor: AppColors.primaryColor,
     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
   ),
   onPressed: () {

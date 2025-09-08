@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
 
 class AdminPairUserspage extends StatefulWidget {
   const AdminPairUserspage({super.key});
@@ -85,6 +86,8 @@ Future<void> _loadUsers() async {
 
 @override
 Widget build(BuildContext context) {
+   final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
   return Scaffold(
     appBar: AppBar(
   backgroundColor: const Color.fromARGB(255, 114, 26, 20),
@@ -100,7 +103,7 @@ Widget build(BuildContext context) {
     child: Text(
       "Bit Tracks",
       style: TextStyle(
-        fontSize: 20,
+        fontSize: screenWidth * 0.05,
         fontWeight: FontWeight.bold,
         color: Colors.white,
       ),
@@ -124,20 +127,20 @@ Widget build(BuildContext context) {
           SizedBox(
             height: 20,
           ),
-          Text('Pair Interns with Supervisors', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 114, 26, 20))),
+          Text('Pair Interns with Supervisors', style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold, color: AppColors.primaryColor)),
            SizedBox(
-            height: 20,
+            height: screenHeight * 0.02,
           ),
           // Supervisor dropdown
           DropdownButtonFormField<User>(
             decoration: InputDecoration(
               labelText: 'Select Supervisor', 
-              labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,)
+              labelStyle: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.bold,)
             ), // 🏷 Label
             items: _supervisorList.map((user) {
               return DropdownMenuItem<User>(
                 value: user,                      // 🔑 What gets returned when selected
-                child: Text(user.name, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,)),          // 👁️ What the user sees
+                child: Text(user.name, style: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.bold,)),          // 👁️ What the user sees
               );
             }).toList(),                         // 📋 List of dropdown options
             onChanged: (selectedUser) {          // 🔄 What happens when user picks one
@@ -148,7 +151,7 @@ Widget build(BuildContext context) {
             },
             value: _selectedSupervisor,          // ✅ Currently selected value
           ),
-      SizedBox(height: 20),
+      SizedBox(height: screenHeight * 0.02,),
 
       // Intern list + Pair button
       if (_selectedSupervisorId != null)
@@ -178,10 +181,10 @@ Widget build(BuildContext context) {
                         }).toList(),
                       ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: screenHeight * 0.02),
               ElevatedButton(
                 onPressed: _selectedInternIds.isEmpty ? null : _pairUsers,
-                child: Text('Pair Selected Interns',style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 125, 3, 3)),),
+                child: Text('Pair Selected Interns',style: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 125, 3, 3)),),
               ),
             ],
           ),

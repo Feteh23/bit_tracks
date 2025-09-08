@@ -3,6 +3,7 @@ import 'package:intern_system/login_pages/signup.dart';
 import 'package:intern_system/login_pages/reset_password.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -14,6 +15,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  
   
   bool _isPasswordHidden = true;
   bool _termsAccepted = false;
@@ -74,16 +76,17 @@ void loginUser() async {
 
   @override
   Widget build(BuildContext context) {
+     final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 114, 26, 20),
+        backgroundColor: AppColors.primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text("Bit Tracks Login", style: TextStyle(fontSize: 20,
-        color: Colors.white,
-         fontWeight: FontWeight.bold)),
+        title: Text("Bit Tracks Login", style: TextStyle(fontSize: screenWidth * 0.05,color: Colors.white,fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
             icon: Icon(Icons.book_online_outlined, color: Colors.white),
@@ -92,51 +95,36 @@ void loginUser() async {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(25),
+        padding: const EdgeInsets.only(left: 20, right: 20,),
         child: Column(
           children: [
-            SizedBox(height: 20),
-            Image.asset('assets/standing_girl.jpg', fit: BoxFit.cover),
-            SizedBox(height: 25),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Email', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
-            SizedBox(height: 8),
-            TextField(
+            SizedBox(height: screenHeight * 0.05),
+            Image.asset('assets/standing_girl.jpg', fit: BoxFit.cover,  width: screenWidth * 0.85,height: screenHeight * 0.4,),
+            SizedBox(height: screenHeight * 0.05),
+           LabeledTextField(
+              labelText: 'Email',
+              hintText: 'Enter your email',
               controller: emailController,
-              decoration: InputDecoration(
-                hintText: "e.g fetehmireillelareine@gmail.com",
-                border: OutlineInputBorder(),
-              ),
             ),
 
-            SizedBox(height: 20),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Password', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
-            SizedBox(height: 8),
-            TextField(
-              controller: passwordController,
+            SizedBox(height: screenHeight * 0.02),
+           
+            LabeledTextField(
+              labelText: 'Password',
+              hintText: 'Enter your password',
               obscureText: _isPasswordHidden,
-              decoration: InputDecoration(
-                hintText: "Enter your password",
-                border: OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: Icon(_isPasswordHidden ? Icons.visibility_off : Icons.visibility),
-                  onPressed: () {
-                    setState(() => _isPasswordHidden = !_isPasswordHidden);
-                  },
-                ),
+              controller: passwordController,
+              suffixIcon: IconButton(
+                icon: Icon(_isPasswordHidden ? Icons.visibility : Icons.visibility_off),
+                onPressed: () => setState(() => _isPasswordHidden = !_isPasswordHidden),
               ),
             ),
-
+            
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ResetPassword())),
-                child: Text('Forgot Password?', style: TextStyle(color: Color.fromARGB(255, 114, 26, 20))),
+                child: Text('Forgot Password?', style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold)),
               ),
             ),
             Row(
@@ -149,22 +137,14 @@ void loginUser() async {
               ],
             ),
 
-            SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Color.fromARGB(255, 100, 99, 99)),
-                onPressed: loginUser,
-                child: _isLoading
-                    ? CircularProgressIndicator(color: const Color.fromARGB(255, 114, 26, 20))
-                    : Text('Login', style: TextStyle(fontSize: 18,
-                    color: Colors.white,
-                     fontWeight: FontWeight.bold)),
-              ),
+            SizedBox(height: screenHeight * 0.02),
+            ReusableButton(
+              buttonText: 'Login',
+              onPressed: loginUser,
+              isLoading: _isLoading,
             ),
 
-            SizedBox(height: 20),
+            SizedBox(height: screenHeight * 0.02),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -172,7 +152,7 @@ void loginUser() async {
                 Text("Don't have an account?"),
                 TextButton(
                   onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => Signup())),
-                  child: Text('Sign Up', style: TextStyle(color: Color.fromARGB(255, 114, 26, 20))),
+                  child: Text('Sign Up', style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold)),
                 ),
               ],
             ),

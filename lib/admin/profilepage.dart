@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
 
 
 class Adminprofilepage extends StatefulWidget {
@@ -19,6 +20,8 @@ class _AdminprofilepageState extends State<Adminprofilepage> {
 final TextEditingController _emailController = TextEditingController();
 
   final ImagePicker _picker = ImagePicker();
+  bool _isEditing = false;
+
   XFile? _imageFile;
 Future<void> _loadAdminData() async {
   final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -82,12 +85,14 @@ void _openGallery() async {
 
   @override
   Widget build(BuildContext context) {
+     final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
- appBar: AppBar(
-  backgroundColor: const Color.fromARGB(255, 114, 26, 20),
-  leading:
-  IconButton(
-    icon: Icon(Icons.arrow_back, color: Colors.white,),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: AppColors.primaryColor,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white,),
     onPressed: () {
       Navigator.pop(context);
     },
@@ -97,7 +102,7 @@ void _openGallery() async {
     child: Text(
       "Bit Tracks Profile",
       style: TextStyle(
-        fontSize: 20,
+        fontSize: screenWidth * 0.05,
         fontWeight: FontWeight.bold,
         color: Colors.white,
       ),
@@ -114,153 +119,174 @@ void _openGallery() async {
   ],
 
 ),
-body: Column(
-  children: [
-    Stack(
-      children: [
-        Container(
-          height: 200,
-          width: double.infinity,
-          color: const Color.fromARGB(255, 114, 26, 20),
+body: SingleChildScrollView(
+  scrollDirection: Axis.vertical,
+  child: Column(
+    children: [
+      Stack(
+        children: [
+          Container(
+            height: screenHeight * 0.2,
+            width: double.infinity,
+            color: AppColors.primaryColor,
+          ),
+          SizedBox(
+            height: screenHeight * 0.1,
+          ),
+        Padding(
+    padding: const EdgeInsets.only(left: 110, top: 100),
+    child: Container(
+      height: screenHeight * 0.2,
+      width: screenHeight * 0.2,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: _imageFile != null
+              ? (kIsWeb
+                  ? NetworkImage(_imageFile!.path)
+                  : FileImage(File(_imageFile!.path)) as ImageProvider)
+              : AssetImage('assets/me.jpg'),
+          fit: BoxFit.cover,
         ),
-        SizedBox(
-          height: 250,
-        ),
-      Padding(
-  padding: const EdgeInsets.only(left: 110, top: 100),
-  child: Container(
-    height: 200,
-    width: 200,
-    decoration: BoxDecoration(
-      image: DecorationImage(
-        image: _imageFile != null
-            ? (kIsWeb
-                ? NetworkImage(_imageFile!.path)
-                : FileImage(File(_imageFile!.path)) as ImageProvider)
-            : AssetImage('assets/me.jpg'),
-        fit: BoxFit.cover,
+        borderRadius: BorderRadius.all(Radius.circular(100)),
+        border: Border.all(width: 3, color: Colors.white),
       ),
-      borderRadius: BorderRadius.all(Radius.circular(100)),
-      border: Border.all(width: 3, color: Colors.white),
     ),
   ),
-),
-        Padding(
-          padding: const EdgeInsets.only(top: 260, left: 220),
-          child:Container(
-                    height: 70, 
-                    width: 70,
-                    decoration: BoxDecoration(
-                       color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      border: Border.all(width: 3, color: Colors.white)
+          Padding(
+            padding: const EdgeInsets.only(top: 260, left: 220),
+            child:Container(
+                      height: screenHeight * 0.07, 
+                      width: screenWidth * 0.13,
+                      decoration: BoxDecoration(
+                         color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        border: Border.all(width: 3, color: Colors.white)
+                      ),
+                      child: IconButton(onPressed: _openGallery, 
+                      icon: Icon(Icons.camera_enhance, size: screenWidth * 0.1, color: AppColors.secondaryColor,) ,)
                     ),
-                    child: IconButton(onPressed: _openGallery, 
-                    icon: Icon(Icons.camera_enhance, size: 50, color: const Color.fromARGB(255, 123, 123, 123),) ,)
-                  ),
+          ),
+        ],
+      ),
+   Container(
+    margin: EdgeInsets.all(20),
+    padding: EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.grey[100],
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(color: AppColors.primaryColor),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Admin Info', style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold)),
+            IconButton(
+              icon: Icon(Icons.edit, color: AppColors.primaryColor),
+              onPressed: () => setState(() => _isEditing = !_isEditing),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+        TextField(
+          controller: TextEditingController(text: _adminData?['name'] ?? '',),
+          enabled: _isEditing,
+          style: TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            labelText: 'Name',
+             labelStyle: TextStyle(color: AppColors.secondaryColor,fontSize: screenWidth * 0.055),
+            filled: true,
+            fillColor: Colors.grey[300],
+            border: OutlineInputBorder(),
+          ),
+        ),
+          SizedBox(height: 10),
+        TextField(
+          controller: TextEditingController(text: _adminData?['email'] ?? ''),
+          enabled: _isEditing,
+           style: TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            labelText: 'Email',
+            labelStyle: TextStyle(color: AppColors.secondaryColor,fontSize: screenWidth * 0.055),
+            filled: true,
+            fillColor: Colors.grey[300],
+            border: OutlineInputBorder(),
+          ),
+        ),
+         SizedBox(height: 10),
+        TextField(
+          controller: TextEditingController(text: _adminData?['number'] ?? ''),
+          enabled: _isEditing,
+           style: TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            labelText: 'Phone Number',
+             labelStyle: TextStyle(color: AppColors.secondaryColor, fontSize: screenWidth * 0.055),
+            filled: true,
+            fillColor: Colors.grey[300],
+            border: OutlineInputBorder(),
+          ),
+        ),
+        SizedBox(height: 10),
+        TextField(
+          controller: TextEditingController(text: _adminData?['branch'] ?? ''),
+          enabled: _isEditing,
+           style: TextStyle(color: Colors.black),
+          decoration: InputDecoration(
+            labelText: 'Branch',
+             labelStyle: TextStyle(color: AppColors.secondaryColor, fontSize: screenWidth * 0.055),
+            filled: true,
+            fillColor: Colors.grey[300],
+            border: OutlineInputBorder(),
+          ),
         ),
       ],
     ),
-  Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Text(
-      _adminData?['name'] ?? 'Loading...',
-      style: TextStyle(
-        color: Color.fromARGB(255, 107, 106, 106),
-        fontSize: 25,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-     SizedBox(width:  65,),
-    IconButton(
-      icon: Icon(Icons.edit, color: Colors.grey),
-      onPressed: () => _editField('name', _adminData?['name']),
-    ),
-  ],
-),
-
-Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Text(
-      _adminData?['branch'] ?? '',
-      style: TextStyle(
-        color: Color.fromARGB(255, 107, 106, 106),
-        fontSize: 22,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-    SizedBox(width:  65,),
-    IconButton(
-      icon: Icon(Icons.edit, color: Colors.grey),
-      onPressed: () => _editField('branch', _adminData?['branch']),
-    ),
-  ],
-),
-
-    SizedBox(height: 40,),
-       
-       Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Text(
-      _adminData?['email'] ?? 'Loading...',
-      style: TextStyle(
-        color: Color.fromARGB(255, 100, 99, 99),
-        fontWeight: FontWeight.bold,
-        fontSize: 20,
-      ),
-    ),
-    IconButton(
-      icon: Icon(Icons.edit, color: Colors.grey),
-      onPressed: () => _editField('email', _adminData?['email']),
-    ),
-  ],
-),
-
- SizedBox(height: 15,),
-      SizedBox(height: 45,),
-     Container(
-  height: 50,
-  width: 350,
-  decoration: BoxDecoration(
-    color: const Color.fromARGB(255, 254, 254, 254),
-    border: Border.all(
-      color: Color.fromARGB(255, 135, 5, 2),
-      width: 1,
-    ),
-    borderRadius: BorderRadius.circular(5),
   ),
-  child: Padding(
-    padding: const EdgeInsets.only(top: 4, left: 10),
-    child: Align(
-      child: TextButton(onPressed: (){},
-        child: Center(child: Text('log out', style: TextStyle(fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 248, 45, 45), fontSize: 20),)),
-        
+  
+        SizedBox(height: screenHeight * 0.03,),
+       Container(
+    height: screenHeight * 0.07,
+    width: screenWidth * 0.85,
+    decoration: BoxDecoration(
+      color: const Color.fromARGB(255, 254, 254, 254),
+      border: Border.all(
+        color: AppColors.primaryColor,
+        width: 1,
+      ),
+      borderRadius: BorderRadius.circular(5),
+    ),
+    child: Padding(
+      padding: const EdgeInsets.only(top: 4, left: 10),
+      child: Align(
+        child: TextButton(onPressed: (){},
+          child: Center(child: Text('log out', style: TextStyle(fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 248, 45, 45), fontSize: screenWidth * 0.05),)),
+  
+        ),
       ),
     ),
   ),
-),
-SizedBox(
-  height: 15,
-),
- TextButton(onPressed: (){
-                      Navigator.push(context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) =>ResetPassword(),
-                      ));
-        },
-        child:  Align(
-alignment: Alignment.topRight,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 25),
-            child: Text('Change Password?', textAlign: TextAlign.right, style: TextStyle(color: const Color.fromARGB(255, 114, 26, 20),fontWeight: FontWeight.bold, fontSize: 18),),
-          )),
-        
-      ),
-       
-  ],
+  SizedBox(
+    height: screenHeight * 0.02,
+  ),
+   TextButton(onPressed: (){
+                        Navigator.push(context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>ResetPassword(),
+                        ));
+          },
+          child:  Align(
+  alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 25),
+              child: Text('Change Password?', textAlign: TextAlign.right, style: TextStyle(color: AppColors.primaryColor,fontWeight: FontWeight.bold, fontSize: screenWidth * 0.05),),
+            )),
+          
+        ),
+         
+    ],
+  ),
 ),
  
     );

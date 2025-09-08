@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intern_system/login_pages/login.dart';
+import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+
 
 class Welcomepage extends StatelessWidget {
   const Welcomepage({super.key});
 
   @override
   Widget build(BuildContext context) {
+     final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -13,7 +18,7 @@ class Welcomepage extends StatelessWidget {
           Container(
             height: double.infinity,
             width: double.infinity,
-            color: const Color.fromARGB(255, 250, 245, 245),
+            color: AppColors.backgroundColor,
           ),
           // Centered text
           Center(
@@ -33,12 +38,16 @@ class Welcomepage extends StatelessWidget {
                   Text(
                     'Welcome',
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: const Color.fromARGB(255, 114, 26, 20), fontSize: 54,fontWeight: FontWeight.bold),
+                    style: TextStyle(color: AppColors.primaryColor, fontSize: screenWidth * 0.15, fontWeight: FontWeight.bold),
                   ),
-                 const SizedBox(height: 300,),
-          Image.asset(
-    'assets/bending_man.jpg',
-     fit: BoxFit.cover,
+                 SizedBox(height: screenHeight * 0.3,),
+          Flexible(
+            child: Image.asset(
+                'assets/bending_man.jpg',
+                 fit: BoxFit.cover,
+                 width: screenWidth * 0.8,
+                 height: screenHeight * 0.4,
+            ),
           ),
           
              ],
