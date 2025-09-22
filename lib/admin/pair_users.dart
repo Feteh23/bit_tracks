@@ -89,8 +89,9 @@ Widget build(BuildContext context) {
    final screenWidth = MediaQuery.of(context).size.width;
   final screenHeight = MediaQuery.of(context).size.height;
   return Scaffold(
+    backgroundColor: AppColors.backgroundColor,
     appBar: AppBar(
-  backgroundColor: const Color.fromARGB(255, 114, 26, 20),
+  backgroundColor: AppColors.primaryColor,
   leading:
   IconButton(
     icon: Icon(Icons.arrow_back, color: Colors.white,),
@@ -136,20 +137,20 @@ Widget build(BuildContext context) {
             decoration: InputDecoration(
               labelText: 'Select Supervisor', 
               labelStyle: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.bold,)
-            ), // 🏷 Label
+            ), 
             items: _supervisorList.map((user) {
               return DropdownMenuItem<User>(
-                value: user,                      // 🔑 What gets returned when selected
+                value: user,                      //  What gets returned when selected
                 child: Text(user.name, style: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.bold,)),          // 👁️ What the user sees
               );
-            }).toList(),                         // 📋 List of dropdown options
-            onChanged: (selectedUser) {          // 🔄 What happens when user picks one
+            }).toList(),                         //  List of dropdown options
+            onChanged: (selectedUser) {          //  What happens when user picks one
               setState(() {
                 _selectedSupervisor = selectedUser;
                 _selectedSupervisorId = selectedUser?.id;
               });
             },
-            value: _selectedSupervisor,          // ✅ Currently selected value
+            value: _selectedSupervisor,          //  Currently selected value
           ),
       SizedBox(height: screenHeight * 0.02,),
 
@@ -184,7 +185,7 @@ Widget build(BuildContext context) {
               SizedBox(height: screenHeight * 0.02),
               ElevatedButton(
                 onPressed: _selectedInternIds.isEmpty ? null : _pairUsers,
-                child: Text('Pair Selected Interns',style: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 125, 3, 3)),),
+                child: Text('Pair Selected Interns',style: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.bold, color: AppColors.primaryColor),),
               ),
             ],
           ),

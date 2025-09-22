@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intern_system/login_pages/reset_password.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+import 'package:intern_system/login_pages/reset_password.dart';
 
 
 class Adminprofilepage extends StatefulWidget {
@@ -18,6 +18,10 @@ class Adminprofilepage extends StatefulWidget {
 class _AdminprofilepageState extends State<Adminprofilepage> {
   Map<String, dynamic>? _adminData;
 final TextEditingController _emailController = TextEditingController();
+final TextEditingController _nameController = TextEditingController();
+final TextEditingController _numberController = TextEditingController();
+final TextEditingController _branchController = TextEditingController();
+
 
   final ImagePicker _picker = ImagePicker();
   bool _isEditing = false;
@@ -32,6 +36,10 @@ Future<void> _loadAdminData() async {
     setState(() {
       _adminData = doc.data();
       _emailController.text = _adminData?['email'] ?? '';
+      _nameController.text = _adminData?['name'] ?? '';
+      _numberController.text = _adminData?['number'] ?? '';
+      _branchController.text = _adminData?['branch'] ?? '';
+
     });
   }
 }
@@ -39,39 +47,6 @@ Future<void> _loadAdminData() async {
 void initState() {
   super.initState();
   _loadAdminData();
-}
-void _editField(String field, String? currentValue) {
-  final controller = TextEditingController(text: currentValue ?? '');
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text('Edit $field'),
-      content: TextField(
-        controller: controller,
-        decoration: InputDecoration(hintText: 'Enter new $field'),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            final uid = FirebaseAuth.instance.currentUser?.uid;
-            if (uid != null) {
-              await FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(uid)
-                  .update({field: controller.text});
-              Navigator.pop(context);
-              _loadAdminData(); // refresh UI
-            }
-          },
-          child: Text('Save'),
-        ),
-      ],
-    ),
-  );
 }
 
 void _openGallery() async {
@@ -88,7 +63,7 @@ void _openGallery() async {
      final screenWidth = MediaQuery.of(context).size.width;
   final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
         leading: IconButton(
@@ -111,7 +86,7 @@ void _openGallery() async {
   ),
   actions: [
     IconButton(
-      icon: Icon(Icons.book_online_outlined, color: Colors.white),
+      icon: Icon(Icons.book_online_outlined, color: AppColors.backgroundColor),
       onPressed: () {
         // Add your action here
       },
@@ -153,13 +128,13 @@ body: SingleChildScrollView(
     ),
   ),
           Padding(
-            padding: const EdgeInsets.only(top: 260, left: 220),
+            padding: EdgeInsets.only(top: screenHeight * 0.26, left: screenWidth * 0.55),
             child:Container(
                       height: screenHeight * 0.07, 
-                      width: screenWidth * 0.13,
+                      width: screenHeight * 0.07,
                       decoration: BoxDecoration(
                          color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
                         border: Border.all(width: 3, color: Colors.white)
                       ),
                       child: IconButton(onPressed: _openGallery, 
@@ -172,31 +147,41 @@ body: SingleChildScrollView(
     margin: EdgeInsets.all(20),
     padding: EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: Colors.grey[100],
+      color: AppColors.backgroundColor,
       borderRadius: BorderRadius.circular(10),
       border: Border.all(color: AppColors.primaryColor),
     ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Admin Info', style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold)),
-            IconButton(
-              icon: Icon(Icons.edit, color: AppColors.primaryColor),
-              onPressed: () => setState(() => _isEditing = !_isEditing),
-            ),
-          ],
-        ),
-        SizedBox(height: 10),
-        TextField(
-          controller: TextEditingController(text: _adminData?['name'] ?? '',),
+   
+  child: Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text(
+      'Admin Info',
+      style: TextStyle(
+        fontSize: screenWidth * 0.05,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    IconButton(
+      icon: Icon(Icons.edit, color: AppColors.primaryColor),
+      onPressed: () {
+        setState(() {
+          _isEditing = true;
+        });
+      },
+    ),
+  ],
+),
+SizedBox(height: 10),
+
+     TextField(
+          controller: _nameController,
           enabled: _isEditing,
           style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
-            labelText: 'Name',
-             labelStyle: TextStyle(color: AppColors.secondaryColor,fontSize: screenWidth * 0.055),
             filled: true,
             fillColor: Colors.grey[300],
             border: OutlineInputBorder(),
@@ -204,12 +189,10 @@ body: SingleChildScrollView(
         ),
           SizedBox(height: 10),
         TextField(
-          controller: TextEditingController(text: _adminData?['email'] ?? ''),
+          controller: _emailController,
           enabled: _isEditing,
            style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
-            labelText: 'Email',
-            labelStyle: TextStyle(color: AppColors.secondaryColor,fontSize: screenWidth * 0.055),
             filled: true,
             fillColor: Colors.grey[300],
             border: OutlineInputBorder(),
@@ -217,12 +200,10 @@ body: SingleChildScrollView(
         ),
          SizedBox(height: 10),
         TextField(
-          controller: TextEditingController(text: _adminData?['number'] ?? ''),
+          controller: _numberController,
           enabled: _isEditing,
            style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
-            labelText: 'Phone Number',
-             labelStyle: TextStyle(color: AppColors.secondaryColor, fontSize: screenWidth * 0.055),
             filled: true,
             fillColor: Colors.grey[300],
             border: OutlineInputBorder(),
@@ -230,27 +211,67 @@ body: SingleChildScrollView(
         ),
         SizedBox(height: 10),
         TextField(
-          controller: TextEditingController(text: _adminData?['branch'] ?? ''),
+          controller: _branchController,
           enabled: _isEditing,
            style: TextStyle(color: Colors.black),
           decoration: InputDecoration(
-            labelText: 'Branch',
-             labelStyle: TextStyle(color: AppColors.secondaryColor, fontSize: screenWidth * 0.055),
             filled: true,
             fillColor: Colors.grey[300],
             border: OutlineInputBorder(),
           ),
         ),
-      ],
-    ),
-  ),
-  
-        SizedBox(height: screenHeight * 0.03,),
+        SizedBox(height: screenHeight * 0.02,),
+    if (_isEditing)
+      Padding(
+        padding: EdgeInsets.only(left: screenWidth * 0.25),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primaryColor,
+          ),
+          onPressed: () async {
+            final uid = FirebaseAuth.instance.currentUser?.uid;
+            if (uid != null) {
+              await FirebaseFirestore.instance.collection('users').doc(uid).update({
+                'name': _nameController.text.trim(),
+                'email': _emailController.text.trim(),
+                'number': _numberController.text.trim(),
+                'branch': _branchController.text.trim(),
+              });
+              setState(() {
+                _isEditing = false;
+              });
+              _loadAdminData(); // Refresh UI
+               ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Profile updated successfully'),
+        backgroundColor: AppColors.primaryColor,
+        behavior: SnackBarBehavior.floating,
+        duration: Duration(seconds: 2),
+      ),
+    );
+
+            }
+          },
+          child: Text('Save Changes', style: TextStyle(color: Colors.white)),
+        ),
+      ),
+  ],
+),
+
+   ),
+       Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ResetPassword())),
+                child: Text('Change Password', style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold, fontSize: screenWidth * 0.05),),
+              ),
+            ),
+    SizedBox(height: screenHeight * 0.02,),
        Container(
-    height: screenHeight * 0.07,
-    width: screenWidth * 0.85,
+    height: screenHeight * 0.055,
+    width: screenWidth * 0.9,
     decoration: BoxDecoration(
-      color: const Color.fromARGB(255, 254, 254, 254),
+      color: AppColors.backgroundColor,
       border: Border.all(
         color: AppColors.primaryColor,
         width: 1,
@@ -261,34 +282,16 @@ body: SingleChildScrollView(
       padding: const EdgeInsets.only(top: 4, left: 10),
       child: Align(
         child: TextButton(onPressed: (){},
-          child: Center(child: Text('log out', style: TextStyle(fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 248, 45, 45), fontSize: screenWidth * 0.05),)),
+          child: Center(child: Text('log out', style: TextStyle(fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 248, 45, 45), fontSize: screenWidth * 0.045),)),
   
         ),
       ),
     ),
   ),
-  SizedBox(
-    height: screenHeight * 0.02,
-  ),
-   TextButton(onPressed: (){
-                        Navigator.push(context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) =>ResetPassword(),
-                        ));
-          },
-          child:  Align(
-  alignment: Alignment.topRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 25),
-              child: Text('Change Password?', textAlign: TextAlign.right, style: TextStyle(color: AppColors.primaryColor,fontWeight: FontWeight.bold, fontSize: screenWidth * 0.05),),
-            )),
-          
-        ),
-         
-    ],
-  ),
-),
- 
+   
+      ],
+    ),
+  ),  
     );
   }
 }

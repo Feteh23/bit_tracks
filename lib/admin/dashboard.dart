@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intern_system/admin/homepage.dart';
 import 'package:intern_system/admin/profilepage.dart';
 import 'package:intern_system/admin/pair_users.dart';
+import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
 
 class AdminDashboar extends StatefulWidget {
   const AdminDashboar({super.key});
@@ -24,31 +25,60 @@ class _AdminDashboarState extends State<AdminDashboar> {
   ];
   @override
   Widget build(BuildContext context) {
+     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
        body: AnimatedSwitcher(
          duration: const Duration(milliseconds: 200),
          child: _pages[_currentIndex],
        ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color.fromARGB(255, 114, 26, 20),
+        backgroundColor: AppColors.primaryColor,
         onTap: NavigateBottomBar,
         currentIndex: _currentIndex,
          selectedItemColor: Colors.white,
   unselectedItemColor: const Color.fromARGB(255, 184, 209, 221),
   selectedLabelStyle: TextStyle(
     fontWeight: FontWeight.bold,
-    fontSize: 14,
+    fontSize: screenWidth*0.0022,
     letterSpacing: 1,
   ),
   unselectedLabelStyle: TextStyle(
     fontWeight: FontWeight.normal,
-    fontSize: 12,
+    fontSize: screenWidth*0.002,
   ),
 
         items: [
-          BottomNavigationBarItem(icon: CircleAvatar( backgroundColor: Colors.white, child: Icon(Icons.home, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'Home'  ),
-          BottomNavigationBarItem(icon: CircleAvatar( backgroundColor: Colors.white, child: Icon(Icons.person, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'Profile'),
-          BottomNavigationBarItem(icon: CircleAvatar( backgroundColor: Colors.white, child: Icon(Icons.supervisor_account, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'pair user'),
+         BottomNavigationBarItem(
+  icon: CircleAvatar(
+    backgroundColor: _currentIndex == 0 ? Colors.white : AppColors.backgroundColor,
+    child: Icon(
+      Icons.home,
+      color: _currentIndex == 0 ? AppColors.primaryColor : const Color.fromARGB(255, 180, 86, 86),
+    ),
+  ),
+  label: 'Home',
+),
+BottomNavigationBarItem(
+  icon: CircleAvatar(
+    backgroundColor: _currentIndex == 1 ? Colors.white : AppColors.backgroundColor,
+    child: Icon(
+      Icons.person,
+      color: _currentIndex == 1 ? AppColors.primaryColor :const Color.fromARGB(255, 180, 86, 86),
+    ),
+  ),
+ label: 'Profile',
+ 
+),
+BottomNavigationBarItem(
+  icon: CircleAvatar(
+    backgroundColor: _currentIndex == 2 ? Colors.white : AppColors.backgroundColor,
+    child: Icon(
+      Icons.supervisor_account,
+      color: _currentIndex == 2 ? AppColors.primaryColor : const Color.fromARGB(255, 180, 86, 86),
+    ),
+  ),
+label: 'pair user',
+),
         ]),
 
     );

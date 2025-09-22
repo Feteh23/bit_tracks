@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:pie_chart/pie_chart.dart';
-
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 class Attendance extends StatefulWidget {
   const Attendance({super.key});
 
@@ -14,56 +14,106 @@ class Attendance extends StatefulWidget {
 class _AttendanceState extends State<Attendance> {
   DateTime _focusedDay = DateTime.now();       // Current view on the calendar
   DateTime? _selectedDay;                      // Day selected by the user
-  
-void _openAttendanceModal(BuildContext context, DateTime date) {
-  String description = '';
-  bool isPresent = true;
+  final TextEditingController _descriptionController = TextEditingController();
+Future<void> _saveAttendanceDescription(DateTime date, String description) async {
+  final internId = FirebaseAuth.instance.currentUser?.uid;
+  if (internId == null) return;
 
-  showDialog(
+  final formattedDate = "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+  final docRef = FirebaseFirestore.instance
+      .collection('interns')
+      .doc(internId)
+      .collection('description')
+      .doc(formattedDate);
+
+  final existingDoc = await docRef.get();
+
+  if (existingDoc.exists) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Log book have already been filled for.", style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.orange,
+      ),
+    );
+    return;
+  }
+
+  await docRef.set({
+    'date': date,
+    'description': description,
+    'isPresent': true,
+    'timestamp': FieldValue.serverTimestamp(),
+  });
+
+  setState(() {
+    attendanceRecords[date] = AttendanceEntry(isPresent: true, description: description);
+  });
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text("Attendance saved successfully!", style: TextStyle(fontWeight: FontWeight.bold)),
+      backgroundColor: Colors.green,
+    ),
+  );
+}
+
+void _openAttendanceModal(BuildContext context, DateTime selectedDay) {
+  final TextEditingController _descriptionController = TextEditingController();
+
+  showModalBottomSheet(
     context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
     builder: (context) {
-       final screenWidth = MediaQuery.of(context).size.width;
-  final screenHeight = MediaQuery.of(context).size.height;
-      return AlertDialog(
-        title: Text('Attendance for ${date.toLocal().toString().split(' ')[0]}'),
-        content: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setModalState) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SwitchListTile(
-                  title: Text(isPresent ? 'Present' : 'Absent', style: TextStyle(fontWeight: FontWeight.bold),),
-                  value: isPresent,
-                  onChanged: (val) {
-                    setModalState(() {
-                      isPresent = val;
-                    });
-                  },
-                ),
-                TextField(
-                  decoration: InputDecoration(labelText: 'Description', labelStyle: TextStyle(fontWeight: FontWeight.bold)),
-                  onChanged: (val) {
-                    description = val;
-                  },
-                ),
-              ],
-            );
-          },
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Mark Attendance", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _descriptionController,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                hintText: "Enter description...",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.save),
+              label: const Text("Submit"),
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryColor),
+              onPressed: () async {
+                try {
+                  await _saveAttendanceDescription(selectedDay, _descriptionController.text);
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Attendance saved successfully!", style: TextStyle(fontWeight: FontWeight.bold)),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } catch (e) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Failed to save attendance: $e", style: TextStyle(fontWeight: FontWeight.bold)),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            child: Text('Save', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.deepPurpleAccent, fontSize: screenWidth * 0.04),),
-           onPressed: () {
-  _saveAttendance(date, isPresent, description);
-  Navigator.of(context).pop();
-},
-
-          ),
-        ],
       );
     },
   );
 }
+
 
 Map<String, double> attendanceData = {
   "Present": 80,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intern_system/home_pages/homepage.dart';
 import 'package:intern_system/home_pages/taskpage.dart';
 import 'package:intern_system/home_pages/profilepage.dart';
+import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
 class Dashborad extends StatefulWidget {
   const Dashborad({super.key});
 
@@ -23,6 +24,7 @@ Profilepage(),
   ];
   @override
   Widget build(BuildContext context) {
+     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
        body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -42,9 +44,37 @@ Profilepage(),
   ),
 
         items: [
-          BottomNavigationBarItem(icon: CircleAvatar(child: Icon(Icons.home, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'Home'  ),
-          BottomNavigationBarItem(icon: CircleAvatar(child: Icon(Icons.task, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'task'),
-          BottomNavigationBarItem(icon: CircleAvatar(child: Icon(Icons.person, color: const Color.fromARGB(255, 114, 26, 20),)), label: 'Profile'),
+            BottomNavigationBarItem(
+  icon: CircleAvatar(
+    backgroundColor: _currentIndex == 0 ? Colors.white : AppColors.backgroundColor,
+    child: Icon(
+      Icons.home,
+      color: _currentIndex == 0 ? AppColors.primaryColor : const Color.fromARGB(255, 180, 86, 86),
+    ),
+  ),
+  label: 'Home',
+),
+BottomNavigationBarItem(
+  icon: CircleAvatar(
+    backgroundColor: _currentIndex == 1 ? Colors.white : AppColors.backgroundColor,
+    child: Icon(
+      Icons.task,
+      color: _currentIndex == 1 ? AppColors.primaryColor :const Color.fromARGB(255, 180, 86, 86),
+    ),
+  ),
+ label: 'task',
+ 
+),
+BottomNavigationBarItem(
+  icon: CircleAvatar(
+    backgroundColor: _currentIndex == 2 ? Colors.white : AppColors.backgroundColor,
+    child: Icon(
+      Icons.person,
+      color: _currentIndex == 2 ? AppColors.primaryColor : const Color.fromARGB(255, 180, 86, 86),
+    ),
+  ),
+label: 'profile',
+)
         ]),
     );
   }

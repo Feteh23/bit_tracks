@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intern_system/login_pages/signup.dart';
 import 'package:intern_system/login_pages/reset_password.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -144,18 +143,6 @@ void loginUser() async {
               isLoading: _isLoading,
             ),
 
-            SizedBox(height: screenHeight * 0.02),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Don't have an account?"),
-                TextButton(
-                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => Signup())),
-                  child: Text('Sign Up', style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold)),
-                ),
-              ],
-            ),
           ],
         ),
       ),

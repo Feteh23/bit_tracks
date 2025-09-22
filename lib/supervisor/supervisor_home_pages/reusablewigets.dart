@@ -12,7 +12,7 @@ class ScreenUtils {
 class AppColors {
   static const Color primaryColor = Color.fromARGB(255, 114, 26, 20);
   static const Color secondaryColor = Color.fromARGB(255, 100, 99, 99);
-  static const Color backgroundColor = Color(0xFFF0F2F5);
+  static const Color backgroundColor = Color.fromARGB(250, 255, 250, 250);
   static const Color textColor = Color(0xFF333333);
 }
  class LabeledTextField extends StatelessWidget {
@@ -24,14 +24,14 @@ class AppColors {
   final TextInputType? keyboardType;
 
   const LabeledTextField({
-    Key? key,
+    super.key,
     required this.labelText,
     required this.hintText,
     this.obscureText = false,
     required this.controller,
     this.suffixIcon,
     this.keyboardType,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
      final screenWidth = MediaQuery.of(context).size.width;
@@ -66,11 +66,11 @@ class AppColors {
   final bool isLoading;
 
   const ReusableButton({
-    Key? key,
+    super.key,
     required this.buttonText,
     required this.onPressed,
     this.isLoading = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +84,7 @@ class AppColors {
         style: ElevatedButton.styleFrom(backgroundColor: AppColors.secondaryColor),
         onPressed: onPressed,
         child: isLoading
-            ? CircularProgressIndicator(color: AppColors.primaryColor)
+            ? CircularProgressIndicator(color: Colors.white)
             : Text(buttonText, style: TextStyle(fontSize: screenWidth * 0.05, color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
@@ -98,14 +98,14 @@ class AppColors {
     final TextInputType? keyboardType;
 
     const StyledTextField({
-      Key? key,
+      super.key,
       required this.labelText,
       required this.hintText,
       this.obscureText = false,
       required this.controller,
       this.keyboardType,
       this.suffixIcon,
-    }) : super(key: key);
+    });
 
     @override
     Widget build(BuildContext context) {
@@ -144,3 +144,4 @@ class AppColors {
     );
   }
 }
+
