@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intern_system/admin/homepage.dart';
 import 'package:intern_system/admin/profilepage.dart';
 import 'package:intern_system/admin/pair_users.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+import 'package:intern_system/reusablewigets.dart';
 
 class AdminDashboar extends StatefulWidget {
   const AdminDashboar({super.key});
@@ -53,7 +53,7 @@ class _AdminDashboarState extends State<AdminDashboar> {
     backgroundColor: _currentIndex == 0 ? Colors.white : AppColors.backgroundColor,
     child: Icon(
       Icons.home,
-      color: _currentIndex == 0 ? AppColors.primaryColor : const Color.fromARGB(255, 180, 86, 86),
+      color: _currentIndex == 0 ? AppColors.primaryColor : AppColors.tertiaryColor,
     ),
   ),
   label: 'Home',
@@ -63,7 +63,7 @@ BottomNavigationBarItem(
     backgroundColor: _currentIndex == 1 ? Colors.white : AppColors.backgroundColor,
     child: Icon(
       Icons.person,
-      color: _currentIndex == 1 ? AppColors.primaryColor :const Color.fromARGB(255, 180, 86, 86),
+      color: _currentIndex == 1 ? AppColors.primaryColor :AppColors.tertiaryColor,
     ),
   ),
  label: 'Profile',
@@ -74,7 +74,7 @@ BottomNavigationBarItem(
     backgroundColor: _currentIndex == 2 ? Colors.white : AppColors.backgroundColor,
     child: Icon(
       Icons.supervisor_account,
-      color: _currentIndex == 2 ? AppColors.primaryColor : const Color.fromARGB(255, 180, 86, 86),
+      color: _currentIndex == 2 ? AppColors.primaryColor : AppColors.tertiaryColor,
     ),
   ),
 label: 'pair user',

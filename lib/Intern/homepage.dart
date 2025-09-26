@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:intern_system/home_pages/attendance.dart';
-import 'package:intern_system/home_pages/dashborad.dart';
-import 'package:intern_system/home_pages/profilepage.dart';
-import 'package:intern_system/home_pages/supervisor.dart';
-import 'package:intern_system/home_pages/taskpage.dart';
-import 'package:intern_system/home_pages/view_log_book.dart';
+import 'package:intern_system/Intern/attendance.dart';
+import 'package:intern_system/Intern/dashborad.dart';
+import 'package:intern_system/Intern/profilepage.dart';
+import 'package:intern_system/Intern/supervisor.dart';
+import 'package:intern_system/Intern/taskpage.dart';
+import 'package:intern_system/Intern/view_log_book.dart';
 import 'package:intern_system/login_pages/login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+import 'package:intern_system/reusablewigets.dart';
+
 
 class Home extends StatelessWidget {
   
@@ -31,14 +30,14 @@ class Home extends StatelessWidget {
               },
               icon: const Icon(Icons.menu),
               color: Colors.white,
-              iconSize: 38,
+              iconSize: screenWidth*0.065,
             );
           }),
-          title: const Align(
+          title:  Align(
             child: Text(
               "Intern Dashboard",
               style: TextStyle(
-                fontSize: 20,
+                fontSize: screenWidth*0.04,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
@@ -49,18 +48,17 @@ class Home extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.book_online_outlined, color: Colors.white),
               onPressed: () {
-                // Add your action here
               },
             ),
           ],
         ),
         drawer: Drawer(
           child: Container(
-            color: const Color.fromARGB(255, 114, 26, 20),
+            color: AppColors.primaryColor,
             child: ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 220),
+                  padding:  EdgeInsets.only(left: screenWidth*0.6, top: screenHeight*0.01),
                   child: TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -75,29 +73,29 @@ class Home extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 70,
+                 SizedBox(
+                  height: screenHeight*0.15,
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 25),
+                Padding(
+                  padding: EdgeInsets.only(left: screenWidth*0.25),
                   child: Text(
                     'Menu',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: screenWidth*0.08,
                       color: Colors.white,
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
+                 SizedBox(
+                  height: screenHeight*0.02,
                 ),
                 const Divider(
                   thickness: 2,
                   color: Colors.white,
                 ),
-                const SizedBox(
-                  height: 50,
+                 SizedBox(
+                  height:  screenHeight*0.07,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
@@ -109,17 +107,18 @@ class Home extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (BuildContext context) => Dashborad(),
-                                ));
+                                )
+                                );
                           },
                           child: const CircleAvatar(
                             radius: 15,
                             child: Icon(
                               Icons.house,
-                              color: Color.fromARGB(255, 114, 26, 20),
+                              color:  AppColors.primaryColor
                             ),
                           )),
-                      const SizedBox(
-                        width: 30,
+                       SizedBox(
+                        width: screenWidth*0.035,
                       ),
                       const Text(
                         'Home',
@@ -128,8 +127,8 @@ class Home extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 40,
+                 SizedBox(
+                  height: screenHeight*0.03,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
@@ -147,11 +146,11 @@ class Home extends StatelessWidget {
                             radius: 15,
                             child: Icon(
                               Icons.task,
-                              color: Color.fromARGB(255, 114, 26, 20),
+                              color: AppColors.primaryColor
                             ),
                           )),
-                      const SizedBox(
-                        width: 30,
+                       SizedBox(
+                        width:screenWidth*0.035,
                       ),
                       const Text(
                         'task',
@@ -160,8 +159,8 @@ class Home extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 40,
+                 SizedBox(
+                  height: screenHeight*0.03,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
@@ -179,11 +178,11 @@ class Home extends StatelessWidget {
                             radius: 15,
                             child: Icon(
                               Icons.person,
-                              color: Color.fromARGB(255, 114, 26, 20),
+                              color: AppColors.primaryColor
                             ),
                           )),
-                      const SizedBox(
-                        width: 30,
+                       SizedBox(
+                        width: screenWidth*0.035,
                       ),
                       const Text(
                         'Account',
@@ -192,8 +191,8 @@ class Home extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 40,
+               SizedBox(
+                  height: screenHeight*0.03,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
@@ -211,11 +210,11 @@ class Home extends StatelessWidget {
                             radius: 15,
                             child: Icon(
                               Icons.supervisor_account,
-                              color: Color.fromARGB(255, 114, 26, 20),
+                              color: AppColors.primaryColor,
                             ),
                           )),
-                      const SizedBox(
-                        width: 30,
+                       SizedBox(
+                        width:screenWidth*0.035 ,
                       ),
                       const Text(
                         'Supervisor',
@@ -224,8 +223,8 @@ class Home extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 40,
+                SizedBox(
+                  height: screenHeight*0.03,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
@@ -243,11 +242,11 @@ class Home extends StatelessWidget {
                             radius: 15,
                             child: Icon(
                               Icons.book_sharp,
-                              color: Color.fromARGB(255, 114, 26, 20),
+                              color: AppColors.primaryColor
                             ),
                           )),
-                      const SizedBox(
-                        width: 30,
+                       SizedBox(
+                        width: screenWidth*0.035,
                       ),
                       const Text(
                         'Fill Log Book',
@@ -256,8 +255,8 @@ class Home extends StatelessWidget {
                     ],
                   ),
                 ),
-                                const SizedBox(
-                  height: 40,
+                                 SizedBox(
+                  height:screenHeight*0.03,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
@@ -271,15 +270,15 @@ class Home extends StatelessWidget {
                                   builder: (BuildContext context) => ViewLogBook(),
                                 ));
                           },
-                          child: const CircleAvatar(
+                          child:  CircleAvatar(
                             radius: 15,
                             child: Icon(
                               Icons.book_online_sharp,
-                              color: Color.fromARGB(255, 114, 26, 20),
+                              color: AppColors.primaryColor,
                             ),
                           )),
-                      const SizedBox(
-                        width: 30,
+                       SizedBox(
+                        width: screenWidth*0.035,
                       ),
                       const Text(
                         'View Log Book',
@@ -288,8 +287,8 @@ class Home extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 40,
+               SizedBox(
+                  height:screenHeight*0.03,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
@@ -307,11 +306,11 @@ class Home extends StatelessWidget {
                             radius: 15,
                             child: Icon(
                               Icons.logout,
-                              color: Color.fromARGB(255, 114, 26, 20),
+                              color: AppColors.primaryColor,
                             ),
                           )),
-                      const SizedBox(
-                        width: 30,
+                       SizedBox(
+                        width: screenWidth*0.035,
                       ),
                       const Text(
                         'logout',
@@ -348,15 +347,15 @@ class Home extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                     SizedBox(height: screenHeight*0.025),
                     // Intern Directory
                     SingleChildScrollView(
                       scrollDirection: Axis.vertical,
                       child: Column(
                         children: [
                           SizedBox(height: screenWidth*0.06,),
-                          const Text('Intern Directory',
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                           Text('Intern Directory',
+                              style: TextStyle(fontSize: screenWidth*0.025, fontWeight: FontWeight.bold)),
                          SizedBox(width: screenHeight*0.06,),
                           _buildInternDirectory(), // This will now handle states correctly
                          SizedBox(width: screenHeight*0.06,),
@@ -507,8 +506,8 @@ Future<int> _getTaskCountForIntern(String internId) async {
         children: [
           const CircleAvatar(
             radius: 24,
+            backgroundColor:  AppColors.tertiaryColor,
             child: Icon(Icons.person, size: 28, color: Colors.white),
-            backgroundColor:  Color.fromARGB(255, 180, 86, 86),
           ),
           const SizedBox(width: 20),
           Expanded(
@@ -517,7 +516,7 @@ Future<int> _getTaskCountForIntern(String internId) async {
               children: [
                 Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 Text(department, style: const TextStyle(color: Colors.grey)),
-                Text(number, style: const TextStyle(color: Colors.black87)),
+                Text(number, style:  TextStyle(color: AppColors.textColor)),
               ],
             ),
           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+import 'package:intern_system/reusablewigets.dart';
 
 class AdminHomepage extends StatefulWidget {
   const AdminHomepage({super.key});
@@ -29,13 +29,13 @@ class _AdminHomepageState extends State<AdminHomepage> {
         'role': selectedRole,
         'branch': '', 
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User created successfully', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User created successfully', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.textColor),)));
       nameController.clear();
       emailController.clear();
       passwordController.clear();
       setState(() => selectedRole = 'intern');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}',  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}',  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.textColor),)));
     }
   }
  Future<void> deleteUser(BuildContext context, String uid) async {
@@ -47,11 +47,11 @@ class _AdminHomepageState extends State<AdminHomepage> {
   await docRef.delete();
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-content: Text('User deleted', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,),),
+content: Text('User deleted', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: AppColors.textColor),),
       action: SnackBarAction(label: 'Undo',onPressed: () async {
           await FirebaseFirestore.instance.collection('users').doc(uid).set(userData!);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('User restored', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,
+            SnackBar(content: Text('User restored', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: AppColors.textColor
     ),)),
           );
         },
@@ -73,22 +73,11 @@ content: Text('User deleted', style: TextStyle(fontSize: 16,fontWeight: FontWeig
              preferredSize: Size.fromHeight(150.0),
             child: AppBar(
               backgroundColor: AppColors.primaryColor,
-            leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
               title: Align(
-                child: Text('Admin Dashboard',style: TextStyle(fontSize: screenWidth * 0.05,fontWeight: FontWeight.bold,color: Colors.white,),
+                child: Text('Admin Dashboard',style: TextStyle(fontSize: screenWidth * 0.07,fontWeight: FontWeight.bold,color: Colors.white,),
                   textAlign: TextAlign.center,
                 ),
               ),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.book_online_outlined, color: Colors.white),
-                  onPressed: () {
-                  },
-                ),
-              ],
                 bottom: TabBar(
              tabs: [
                Tab(text: 'Create User'),
@@ -106,138 +95,174 @@ content: Text('User deleted', style: TextStyle(fontSize: 16,fontWeight: FontWeig
             ),
             ),
           ),
-        body: TabBarView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                  StyledTextField(labelText: 'Name',hintText: 'Enter full name',controller: nameController, ),
-                    SizedBox(height: screenHeight * 0.02),
-                    StyledTextField(labelText: 'Email', hintText: 'Enter email', controller: emailController, keyboardType: TextInputType.emailAddress,),
-                    SizedBox(height: screenHeight * 0.02),
-                    StyledTextField(labelText: 'Phone', hintText: 'Enter phone number', controller: phoneController, keyboardType: TextInputType.phone,),
-                    SizedBox(height: screenHeight * 0.02),
-                    StyledTextField(labelText: 'Password',hintText: 'Enter password',controller: passwordController,obscureText: true,
-                      suffixIcon:  IconButton(
-                  icon: Icon(_isPasswordHidden ? Icons.visibility : Icons.visibility_off),
-                  onPressed: () => setState(() => _isPasswordHidden = !_isPasswordHidden),
-                ),
-                    ),
-                       SizedBox(height: screenHeight * 0.02,),
-                    DropdownButtonFormField(
-                      value: selectedRole,
-                      items: roles.map((role) => DropdownMenuItem(value: role, child: Text(role, style: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.bold),))).toList(),
-                      onChanged: (value) => setState(() => selectedRole = value!),
-                      decoration: InputDecoration(
-                        labelText: 'Role', labelStyle: TextStyle( fontSize: screenWidth * 0.042,color: AppColors.primaryColor,fontWeight: FontWeight.bold,),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TabBarView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20, left: 15, right: 15),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: [
+                    StyledTextField(labelText: 'Name',hintText: 'Enter full name',controller: nameController, ),
+                      SizedBox(height: screenHeight * 0.02),
+                      StyledTextField(labelText: 'Email', hintText: 'Enter email', controller: emailController, keyboardType: TextInputType.emailAddress,),
+                      SizedBox(height: screenHeight * 0.02),
+                      StyledTextField(labelText: 'Phone', hintText: 'Enter phone number', controller: phoneController, keyboardType: TextInputType.phone,),
+                      SizedBox(height: screenHeight * 0.02),
+                      StyledTextField(labelText: 'Password',hintText: 'Enter password',controller: passwordController,obscureText: true,
+                        suffixIcon:  IconButton(
+                    icon: Icon(_isPasswordHidden ? Icons.visibility : Icons.visibility_off),
+                    onPressed: () => setState(() => _isPasswordHidden = !_isPasswordHidden),
+                  ),
+                      ),
+                         SizedBox(height: screenHeight * 0.02,),
+                      DropdownButtonFormField(
+                        value: selectedRole,
+                        items: roles.map((role) => DropdownMenuItem(value: role, child: Text(role, style: TextStyle(fontSize: screenWidth * 0.04, fontWeight: FontWeight.bold),))).toList(),
+                        onChanged: (value) => setState(() => selectedRole = value!),
+                        decoration: InputDecoration(
+                          labelText: 'Role', labelStyle: TextStyle( fontSize: screenWidth * 0.042,color: AppColors.primaryColor,fontWeight: FontWeight.bold,),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.03,),
+                    ElevatedButton(
+                    onPressed: createUser,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      foregroundColor: Colors.white, 
+                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.03,),
-                  ElevatedButton(
-                  onPressed: createUser,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    foregroundColor: Colors.white, 
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                    child: Text('Create User',style: TextStyle(fontSize: screenWidth * 0.04,fontWeight: FontWeight.bold,),
                     ),
                   ),
-                  child: Text('Create User',style: TextStyle(fontSize: screenWidth * 0.04,fontWeight: FontWeight.bold,),
+                    ],
                   ),
-                ),
-                  ],
                 ),
               ),
+          
+              // Manage Users Tab
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection('users').snapshots(),
+                builder: (context, snapshot) {
+                   if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return Center(child: Text('No users found.'));
+            }
+            final users = snapshot.data!.docs;
+                  return ListView.builder(
+                    itemCount: users.length,
+                    itemBuilder: (context, index) {
+                      final user = users[index];
+                      final uid = user.id;
+                      final name = user['name'];
+                      final email = user['email'];
+                      final number = user['number'] ?? 'N/A';
+                      final role = user['role'];
+          SizedBox(height: screenHeight*0.05,);
+                     return Column(
+            children: [
+             Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 241, 241, 241),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+          color: Colors.black26,
+          blurRadius: 8,
+          offset: Offset(2, 4),
+                ),
+              ],
             ),
-
-            // Manage Users Tab
-            StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('users').snapshots(),
-              builder: (context, snapshot) {
-                 if (snapshot.connectionState == ConnectionState.waiting) {
-    return Center(child: CircularProgressIndicator());
-  }
-  if (snapshot.hasError) {
-    return Center(child: Text('Error: ${snapshot.error}'));
-  }
-  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-    return Center(child: Text('No users found.'));
-  }
-  final users = snapshot.data!.docs;
-                return ListView.builder(
-                  itemCount: users.length,
-                  itemBuilder: (context, index) {
-                    final user = users[index];
-                    final uid = user.id;
-                    final name = user['name'];
-                    final email = user['email'];
-                    final number = user['number'] ?? 'N/A';
-                    final role = user['role'];
-
-                    return ListTile(
-                      title: Text('$name  ($role)',style:  TextStyle(fontSize: screenWidth * 0.043, fontWeight: FontWeight.bold),),
-    subtitle: Column(
-       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(number,style: TextStyle(fontSize: screenWidth * 0.041, fontWeight: FontWeight.bold),),
-        Text(email,style: TextStyle(fontSize: screenWidth * 0.04, color: Colors.grey[700],),),
-      ],
-    ),
-                       trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.edit, color: AppColors.secondaryColor),
-                            onPressed: () {
-                              showEditUserDialog(
-                                context,
-                                uid: user.id,
-                                name: user['name'],
-                                email: user['email'],
-                                number: user['number'] ?? '',
-                                branch: user['branch'] ?? '',
-                                 role: user['role'] ?? 'intern',
-                              );
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: const Color.fromARGB(255, 214, 32, 19)),
-                           onPressed: () => deleteUser(context, uid),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Left side: user info
+                 CircleAvatar(
+              radius: 40,
+              backgroundColor: AppColors.tertiaryColor,
+              child: Icon(Icons.person, size: 70, color: const Color.fromARGB(255, 250, 250, 250),)),
+              SizedBox(width: screenHeight * 0.015),
+                Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('$name  ($role)', style: TextStyle(fontSize: screenWidth * 0.043, fontWeight: FontWeight.bold)),
+              Text(number, style: TextStyle(fontSize: screenWidth * 0.041, fontWeight: FontWeight.bold)),
+              Text(email, style: TextStyle(fontSize: screenWidth * 0.04, color: Colors.grey[700])),
+            ],
+          ),
+                ),
+          
+                // Right side: action buttons
+                Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(Icons.edit, color: AppColors.secondaryColor),
+              onPressed: () {
+                showEditUserDialog(
+                  context,
+                  uid: user.id,
+                  name: user['name'],
+                  email: user['email'],
+                  number: user['number'] ?? '',
+                  branch: user['branch'] ?? '',
+                  role: user['role'] ?? 'intern',
                 );
               },
             ),
-            // Complaints Tab
-            StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('complaints').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
-                final complaints = snapshot.data!.docs;
-
-                return ListView.builder(
-                  itemCount: complaints.length,
-                  itemBuilder: (context, index) {
-                    final complaint = complaints[index];
-                    final message = complaint['message'];
-                    final from = complaint['from'];
-
-                    return ListTile(
-                      title: Text('From: $from'),
-                      subtitle: Text(message),
-                    );
-                  },
-                );
-              },
+            IconButton(
+              icon: Icon(Icons.delete, color: const Color.fromARGB(255, 214, 32, 19)),
+              onPressed: () => deleteUser(context, uid),
             ),
           ],
+                ),
+              ],
+            ),
+          ),
+              SizedBox(height: screenHeight * 0.02), 
+            ],
+          );
+                    },
+                  );
+                },
+              ),
+              // Complaints Tab
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection('complaints').snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+                  final complaints = snapshot.data!.docs;
+          
+                  return ListView.builder(
+                    itemCount: complaints.length,
+                    itemBuilder: (context, index) {
+                      final complaint = complaints[index];
+                      final message = complaint['message'];
+                      final from = complaint['from'];
+          
+                      return ListTile(
+                        title: Text('From: $from'),
+                        subtitle: Text(message),
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

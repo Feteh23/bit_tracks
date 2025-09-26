@@ -4,7 +4,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+import 'package:intern_system/login_pages/login.dart';
+import 'package:intern_system/reusablewigets.dart';
 import 'package:intern_system/login_pages/reset_password.dart';
 
 class SupervisorProfile extends StatefulWidget {
@@ -63,12 +64,16 @@ void _openGallery() async {
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppColors.primaryColor,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white,),
-    onPressed: () {
+       leading: IconButton(
+  icon: Icon(Icons.arrow_back, color: Colors.white, ),
+  onPressed: () {
+    if (Navigator.canPop(context)) {
       Navigator.pop(context);
-    },
-  ),
+    } else {
+      Navigator.pushReplacementNamed(context, '/');
+    }
+  },
+),
 
   title: Align(
     child: Text(
@@ -105,32 +110,40 @@ body: SingleChildScrollView(
           SizedBox(
             height: screenHeight * 0.1,
           ),
-        Padding(
-    padding: const EdgeInsets.only(left: 110, top: 100),
-    child: Container(
-      height: screenHeight * 0.2,
-      width: screenHeight * 0.2,
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: _imageFile != null
-              ? (kIsWeb
-                  ? NetworkImage(_imageFile!.path)
-                  : FileImage(File(_imageFile!.path)) as ImageProvider)
-              : AssetImage('assets/me.jpg'),
-          fit: BoxFit.cover,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(100)),
-        border: Border.all(width: 3, color: Colors.white),
-      ),
+         Padding(
+  padding:EdgeInsets.only(left: screenWidth*0.22, top: screenHeight*0.06),
+  child: Container(
+    height: screenHeight*0.25,
+    width: screenHeight*0.25,
+    decoration: BoxDecoration(
+      color: Color.fromARGB(255, 252, 247, 247),
+      borderRadius: BorderRadius.all(Radius.circular(100)),
+      border: Border.all(width: 3, color: Colors.white),
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(100),
+      child: _imageFile != null
+          ? (kIsWeb
+              ? Image.network(_imageFile!.path, fit: BoxFit.cover)
+              : Image.file(File(_imageFile!.path), fit: BoxFit.cover))
+          : Center(
+              child: Icon(
+                Icons.person,
+                size: 240,
+                color: Colors.grey,
+              ),
+            ),
     ),
   ),
+),
+
           Padding(
-            padding: EdgeInsets.only(top: screenHeight * 0.26, left: screenWidth * 0.55),
+            padding: EdgeInsets.only(top: screenHeight * 0.25, left: screenWidth * 0.6),
             child:Container(
                       height: screenHeight * 0.07, 
                       width: screenHeight * 0.07,
                       decoration: BoxDecoration(
-                         color: Colors.white,
+                         color: Color.fromARGB(255, 252, 247, 247),
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                         border: Border.all(width: 3, color: Colors.white)
                       ),
@@ -172,7 +185,7 @@ body: SingleChildScrollView(
     ),
   ],
 ),
-SizedBox(height: 10),
+SizedBox(height: screenHeight*0.015),
 
      TextField(
           controller: _nameController,
@@ -184,7 +197,7 @@ SizedBox(height: 10),
             border: OutlineInputBorder(),
           ),
         ),
-          SizedBox(height: 10),
+          SizedBox(height: screenHeight*0.015),
         TextField(
           controller: _emailController,
           enabled: _isEditing,
@@ -195,7 +208,7 @@ SizedBox(height: 10),
             border: OutlineInputBorder(),
           ),
         ),
-         SizedBox(height: 10),
+         SizedBox(height: screenHeight*0.015),
         TextField(
           controller: _numberController,
           enabled: _isEditing,
@@ -206,7 +219,7 @@ SizedBox(height: 10),
             border: OutlineInputBorder(),
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: screenHeight*0.015),
         TextField(
           controller: _branchController,
           enabled: _isEditing,
@@ -278,8 +291,15 @@ SizedBox(height: 10),
     child: Padding(
       padding: const EdgeInsets.only(top: 4, left: 10),
       child: Align(
-        child: TextButton(onPressed: (){},
-          child: Center(child: Text('log out', style: TextStyle(fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 248, 45, 45), fontSize: screenWidth * 0.045),)),
+        child: TextButton(onPressed: (){
+            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) => Homepage(),
+                                )
+                                );
+        },
+          child: Center(child: Text('log out', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.primaryColor, fontSize: screenWidth * 0.045),)),
   
         ),
       ),

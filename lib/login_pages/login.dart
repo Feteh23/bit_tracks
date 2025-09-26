@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intern_system/login_pages/reset_password.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+import 'package:intern_system/login_pages/welcomepage.dart';
+import 'package:intern_system/reusablewigets.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -83,7 +84,14 @@ void loginUser() async {
         backgroundColor: AppColors.primaryColor,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) => Welcomepage(),
+                                )
+                                );
+                          },
         ),
         title: Text("Bit Tracks Login", style: TextStyle(fontSize: screenWidth * 0.05,color: Colors.white,fontWeight: FontWeight.bold)),
         actions: [
@@ -97,7 +105,7 @@ void loginUser() async {
         padding: const EdgeInsets.only(left: 20, right: 20,),
         child: Column(
           children: [
-            SizedBox(height: screenHeight * 0.05),
+            SizedBox(height: screenHeight * 0.045),
             Image.asset('assets/standing_girl.jpg', fit: BoxFit.cover,  width: screenWidth * 0.85,height: screenHeight * 0.4,),
             SizedBox(height: screenHeight * 0.05),
            LabeledTextField(
@@ -123,7 +131,7 @@ void loginUser() async {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ResetPassword())),
-                child: Text('Forgot Password?', style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.bold)),
+                child: Text('Forgot Password?', style: TextStyle(color: AppColors.primaryColor,)),
               ),
             ),
             Row(
@@ -132,7 +140,7 @@ void loginUser() async {
                   value: _termsAccepted,
                   onChanged: (value) => setState(() => _termsAccepted = value!),
                 ),
-                Text('I accept all terms and conditions', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text('I accept all terms and conditions', style: TextStyle()),
               ],
             ),
 

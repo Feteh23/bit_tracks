@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+import 'package:intern_system/reusablewigets.dart';
 
 class AdminPairUserspage extends StatefulWidget {
   const AdminPairUserspage({super.key});
@@ -79,7 +79,7 @@ Future<void> _loadUsers() async {
     );
 
     setState(() {
-      // clear your selections if you want
+  // clear selection
       _selectedInternIds.clear();
     });
   }
@@ -92,13 +92,17 @@ Widget build(BuildContext context) {
     backgroundColor: AppColors.backgroundColor,
     appBar: AppBar(
   backgroundColor: AppColors.primaryColor,
-  leading:
-  IconButton(
-    icon: Icon(Icons.arrow_back, color: Colors.white,),
-    onPressed: () {
+ leading: IconButton(
+  icon: Icon(Icons.arrow_back, color: Colors.white, ),
+  onPressed: () {
+    if (Navigator.canPop(context)) {
       Navigator.pop(context);
-    },
-  ),
+    } else {
+      Navigator.pushReplacementNamed(context, '/');
+    }
+  },
+),
+
 
   title: Align(
     child: Text(
@@ -115,18 +119,17 @@ Widget build(BuildContext context) {
     IconButton(
       icon: Icon(Icons.book_online_outlined, color: Colors.white),
       onPressed: () {
-        // Add your action here
       },
     ),
   ],
 
 ),
     body: Padding(
-      padding: const EdgeInsets.all(16),
+      padding:  EdgeInsets.all(16),
       child: Column(
         children: [
           SizedBox(
-            height: 20,
+            height: screenHeight*0.08,
           ),
           Text('Pair Interns with Supervisors', style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold, color: AppColors.primaryColor)),
            SizedBox(

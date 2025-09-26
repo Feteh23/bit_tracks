@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intern_system/home_pages/homepage.dart';
-import 'package:intern_system/home_pages/taskpage.dart';
-import 'package:intern_system/home_pages/profilepage.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+import 'package:intern_system/Intern/homepage.dart';
+import 'package:intern_system/Intern/taskpage.dart';
+import 'package:intern_system/Intern/profilepage.dart';
+import 'package:intern_system/reusablewigets.dart';
 class Dashborad extends StatefulWidget {
   const Dashborad({super.key});
 
@@ -35,12 +35,12 @@ Profilepage(),
   unselectedItemColor: const Color.fromARGB(255, 184, 209, 221),
   selectedLabelStyle: TextStyle(
     fontWeight: FontWeight.bold,
-    fontSize: 14,
+    fontSize: screenWidth*0.015,
     letterSpacing: 1,
   ),
   unselectedLabelStyle: TextStyle(
     fontWeight: FontWeight.normal,
-    fontSize: 12,
+    fontSize: screenWidth*0.01,
   ),
 
         items: [
@@ -49,7 +49,7 @@ Profilepage(),
     backgroundColor: _currentIndex == 0 ? Colors.white : AppColors.backgroundColor,
     child: Icon(
       Icons.home,
-      color: _currentIndex == 0 ? AppColors.primaryColor : const Color.fromARGB(255, 180, 86, 86),
+      color: _currentIndex == 0 ? AppColors.primaryColor : AppColors.tertiaryColor,
     ),
   ),
   label: 'Home',
@@ -59,7 +59,7 @@ BottomNavigationBarItem(
     backgroundColor: _currentIndex == 1 ? Colors.white : AppColors.backgroundColor,
     child: Icon(
       Icons.task,
-      color: _currentIndex == 1 ? AppColors.primaryColor :const Color.fromARGB(255, 180, 86, 86),
+      color: _currentIndex == 1 ? AppColors.primaryColor :AppColors.tertiaryColor,
     ),
   ),
  label: 'task',
@@ -70,7 +70,7 @@ BottomNavigationBarItem(
     backgroundColor: _currentIndex == 2 ? Colors.white : AppColors.backgroundColor,
     child: Icon(
       Icons.person,
-      color: _currentIndex == 2 ? AppColors.primaryColor : const Color.fromARGB(255, 180, 86, 86),
+      color: _currentIndex == 2 ? AppColors.primaryColor : AppColors.tertiaryColor,
     ),
   ),
 label: 'profile',

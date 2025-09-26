@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intern_system/reusablewigets.dart';
 
 class ViewLogBook extends StatefulWidget {
   const ViewLogBook({super.key});
@@ -12,22 +13,29 @@ class ViewLogBook extends StatefulWidget {
 class _ViewLogBookState extends State<ViewLogBook> {
   @override
   Widget build(BuildContext context) {
+     final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-  backgroundColor: const Color.fromARGB(255, 114, 26, 20),
-  leading:
-  IconButton(
-    icon: Icon(Icons.arrow_back, color: Colors.white,),
-    onPressed: () {
+  backgroundColor: AppColors.primaryColor,
+ leading: IconButton(
+  icon: Icon(Icons.arrow_back, color: Colors.white, ),
+  onPressed: () {
+    if (Navigator.canPop(context)) {
       Navigator.pop(context);
-    },
-  ),
+    } else {
+      Navigator.pushReplacementNamed(context, '/');
+    }
+  },
+),
+
 
   title: Align(
     child: Text(
       "Bit Tracks ",
       style: TextStyle(
-        fontSize: 20,
+        fontSize: screenWidth*0.025,
         fontWeight: FontWeight.bold,
         color: Colors.white,
       ),
@@ -37,12 +45,9 @@ class _ViewLogBookState extends State<ViewLogBook> {
   actions: [
     IconButton(
       icon: Icon(Icons.book_online_outlined, color: Colors.white),
-      onPressed: () {
-        // Add your action here
-      },
+      onPressed: () {},
     ),
   ],
-
 ),
 body: StreamBuilder<QuerySnapshot>(
   stream: FirebaseFirestore.instance
@@ -59,7 +64,7 @@ body: StreamBuilder<QuerySnapshot>(
       return Center(child: Text('Error: ${snapshot.error}'));
     }
     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-      return const Center(child: Text('No logbook entries found.'));
+      return const Center(child: Text('No logbook entries found.', style: TextStyle(fontSize: 24),));
     }
 
     final entries = snapshot.data!.docs;
@@ -111,14 +116,14 @@ body: StreamBuilder<QuerySnapshot>(
   }
 }
 void _editEntry(BuildContext context, String docId, String currentDescription) {
-  final TextEditingController _editController = TextEditingController(text: currentDescription);
+  final TextEditingController editController = TextEditingController(text: currentDescription);
 
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
       title: const Text("Edit Description"),
       content: TextField(
-        controller: _editController,
+        controller: editController,
         maxLines: 3,
         decoration: const InputDecoration(border: OutlineInputBorder()),
       ),
@@ -134,7 +139,7 @@ void _editEntry(BuildContext context, String docId, String currentDescription) {
                 .doc(FirebaseAuth.instance.currentUser?.uid)
                 .collection('description')
                 .doc(docId)
-                .update({'description': _editController.text});
+                .update({'description': editController.text});
 
             Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(

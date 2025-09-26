@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/homepage.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/profilePage.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/taskPage.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+import 'package:intern_system/supervisor/supervisor/homepage.dart';
+import 'package:intern_system/supervisor/supervisor/profilePage.dart';
+import 'package:intern_system/supervisor/supervisor/taskPage.dart';
+import 'package:intern_system/reusablewigets.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 
 class Dashboard_supervisor extends StatefulWidget {
@@ -77,7 +77,7 @@ class _Dashboard_supervisorState extends State<Dashboard_supervisor> {
     backgroundColor: _currentIndex == 0 ? Colors.white : AppColors.backgroundColor,
     child: Icon(
       Icons.home,
-      color: _currentIndex == 0 ? AppColors.primaryColor : const Color.fromARGB(255, 180, 86, 86),
+      color: _currentIndex == 0 ? AppColors.primaryColor : AppColors.tertiaryColor,
     ),
   ),
   label: 'Home',
@@ -87,7 +87,7 @@ BottomNavigationBarItem(
     backgroundColor: _currentIndex == 1 ? Colors.white : AppColors.backgroundColor,
     child: Icon(
       Icons.person,
-      color: _currentIndex == 1 ? AppColors.primaryColor : const Color.fromARGB(255, 180, 86, 86),
+      color: _currentIndex == 1 ? AppColors.primaryColor : AppColors.tertiaryColor,
     ),
   ),
  label: 'Profile',
@@ -98,7 +98,7 @@ BottomNavigationBarItem(
     backgroundColor: _currentIndex == 2 ? Colors.white : AppColors.backgroundColor,
     child: Icon(
       Icons.task,
-      color: _currentIndex == 2 ? AppColors.primaryColor : const Color.fromARGB(255, 180, 86, 86),
+      color: _currentIndex == 2 ? AppColors.primaryColor : AppColors.tertiaryColor,
     ),
   ),
 label: 'task',

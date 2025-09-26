@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+import 'package:intern_system/reusablewigets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class HomePage_supervisor extends StatefulWidget {
@@ -78,147 +78,141 @@ void _createTask() async {
 }
 
  
- void _showAssignTaskDialog(String internId, String internName) {
+Future<void> _showAssignTaskDialog(String internId, String internName) async {
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid == null) {
     showDialog(
       context: context,
-      builder: (BuildContext dialogContext) {
-        // Use StatefulBuilder to manage the internal state of the dialog
-        return StatefulBuilder(
-          builder: (context, setState) {
-            final uid = FirebaseAuth.instance.currentUser?.uid;
-              DocumentSnapshot? selectedTaskDoc; // Holds the currently selected task
-            if (uid == null) {
-              return AlertDialog(
-                title: const Text('Error'),
-                content: const Text('Supervisor not logged in.'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(dialogContext),
-                    child: const Text('OK'),
-                  ),
-                ],
-              );
-            }
+      builder: (_) => AlertDialog(
+        title: const Text('Error'),
+        content: const Text('Supervisor not logged in.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+    return;
+  }
 
-            return AlertDialog(
-              title: Text('Assign Task to $internName'),
-              content: FutureBuilder<QuerySnapshot>(
-               // Fetch supervisor's tasks from their subcollection
-                future: FirebaseFirestore.instance
-                    .collection('supervisors')
-                    .doc(uid)
-                    .collection('tasks')
-                    .get(), // Use .get() to fetch tasks once for the dialog
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.hasError) {
-                    return Text('Error loading tasks: ${snapshot.error}');
-                  }
-                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Text('You have not created any tasks yet.');
-                  }
+  final taskSnapshot = await FirebaseFirestore.instance
+      .collection('supervisors')
+      .doc(uid)
+      .collection('tasks')
+      .get();
 
-                  final List<DocumentSnapshot> supervisorTasks = snapshot.data!.docs;
-                  // Initialize _selectedTaskDoc if it's null and there are tasks
-                  if (selectedTaskDoc == null && supervisorTasks.isNotEmpty) {
-                    selectedTaskDoc = supervisorTasks.first;setState(() {
-    selectedTaskDoc = supervisorTasks.first;
-  });
+  final supervisorTasks = taskSnapshot.docs;
 
-                  }
+  if (supervisorTasks.isEmpty) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('No Tasks'),
+        content: const Text('You have not created any tasks yet.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+    return;
+  }
 
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      DropdownButton<DocumentSnapshot>(
-                        value: selectedTaskDoc,
-                        onChanged: (DocumentSnapshot? newValue) {
-                          setState(() {
-                            selectedTaskDoc = newValue;
-                          });
-                        },
-                        items: supervisorTasks.map((DocumentSnapshot taskDoc) {
-                          return DropdownMenuItem<DocumentSnapshot>(
-                            value: taskDoc,
-                            child: Text(taskDoc['title'] ?? 'Untitled Task'),
-                          );
-                        }).toList(),
-                        isExpanded: false,
-                        hint: const Text('Select a task'),
-                      ),
-                      // Optionally display details of the selected task
+  // Now show the dialog with pre-fetched tasks
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      DocumentSnapshot? selectedTaskDoc = supervisorTasks.first;
 
-                      if (selectedTaskDoc != null)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Description: ${selectedTaskDoc!['description'] ?? 'N/A'}',
-                                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                              ),
-                              Text(
-                                'Start Date: ${(selectedTaskDoc!['startDate'] as Timestamp?)?.toDate().toLocal().toString().split(' ')[0] ?? 'N/A'}',
-                                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                              ),
+      return StatefulBuilder(
+        builder: (context, setState) {
+          final screenWidth = MediaQuery.of(context).size.width;
 
-                              Text(
-                                'Deadline: ${(selectedTaskDoc!['deadline'] as Timestamp?)?.toDate().toLocal().toString().split(' ')[0] ?? 'N/A'}',
-                                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        ),
-                    ],
-                  );
-                },
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext),
-                  child: const Text('Cancel'),
+          return AlertDialog(
+            title: Text('Assign Task to $internName'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DropdownButton<DocumentSnapshot>(
+                  value: selectedTaskDoc,
+                  onChanged: (DocumentSnapshot? newValue) {
+                    setState(() {
+                      selectedTaskDoc = newValue;
+                    });
+                  },
+                  items: supervisorTasks.map((taskDoc) {
+                    return DropdownMenuItem<DocumentSnapshot>(
+                      value: taskDoc,
+                      child: Text(taskDoc['title'] ?? 'Untitled Task'),
+                    );
+                  }).toList(),
+                  isExpanded: false,
+                  hint: const Text('Select a task'),
                 ),
-                ElevatedButton(
-                   onPressed: selectedTaskDoc == null ? null : () async {
+                if (selectedTaskDoc != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Description: ${selectedTaskDoc!['description'] ?? 'N/A'}',
+                          style: TextStyle(fontSize: screenWidth * 0.032, color: AppColors.textColor),
+                        ),
+                        Text(
+                          'Start Date: ${(selectedTaskDoc!['startDate'] as Timestamp?)?.toDate().toLocal().toString().split(' ')[0] ?? 'N/A'}',
+                          style: TextStyle(fontSize: screenWidth * 0.032, color: AppColors.textColor),
+                        ),
+                        Text(
+                          'Deadline: ${(selectedTaskDoc!['deadline'] as Timestamp?)?.toDate().toLocal().toString().split(' ')[0] ?? 'N/A'}',
+                          style: TextStyle(fontSize: screenWidth * 0.032, color: AppColors.textColor),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: selectedTaskDoc == null
+                    ? null
+                    : () async {
+                        final selectedTaskData = selectedTaskDoc!.data() as Map<String, dynamic>;
 
-                    if (selectedTaskDoc != null && selectedTaskDoc!.id.isNotEmpty) {
-  final selectedTaskData = selectedTaskDoc!.data() as Map<String, dynamic>;
+                        await FirebaseFirestore.instance
+                            .collection('supervisors')
+                            .doc(uid)
+                            .collection('tasks')
+                            .doc(selectedTaskDoc!.id)
+                            .update({
+                          'assignedTo': FieldValue.arrayUnion([internId]),
+                          'assignedToNames': FieldValue.arrayUnion([internName]),
+                          'assignedAt': Timestamp.now(),
+                          'status': 'pending',
+                        });
 
-  await FirebaseFirestore.instance
-    .collection('supervisors')
-    .doc(uid)
-    .collection('tasks')
-    .doc(selectedTaskDoc!.id)
-    .update({
-      'assignedTo': FieldValue.arrayUnion([internId]),
-      'assignedToNames': FieldValue.arrayUnion([internName]),
-      'assignedAt': Timestamp.now(),
-      'status': 'pending',
-    });
-
-  Navigator.pop(dialogContext);
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text('Task "${selectedTaskData['title']}" assigned to $internName')),
-  );
-} else {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text('Please select a valid task to assign.')),
+                        Navigator.pop(dialogContext);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Task "${selectedTaskData['title']}" assigned to $internName')),
+                        );
+                      },
+                child: const Text('Assign'),
+              ),
+            ],
+          );
+        },
+      );
+    },
   );
 }
-
-                  },
-                  child: const Text('Assign'),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -232,14 +226,10 @@ void _createTask() async {
           preferredSize: const Size.fromHeight(150.0),
           child: AppBar(
             backgroundColor: AppColors.primaryColor,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pop(context),
-            ),
             title:  Align(
               child: Text(
                 'Supervisor Dashboard',
-                style: TextStyle(fontSize: screenWidth*0.055, fontWeight: FontWeight.bold, color: Colors.white),
+                style: TextStyle(fontSize: screenWidth*0.07, fontWeight: FontWeight.bold, color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -272,7 +262,7 @@ void _createTask() async {
             controller: _taskTitleController,
     style: TextStyle( 
     fontSize: screenWidth*0.04,
-    color: Colors.black,
+    color: AppColors.textColor,
     fontWeight: FontWeight.bold,
   ),
                    decoration: InputDecoration(
@@ -312,7 +302,7 @@ Row(
           _startDate == null
               ? 'Select Start Date'
               : 'Start: ${_startDate!.toLocal().toString().split(' ')[0]}',
-              style: TextStyle(color: Colors.black, fontSize: screenWidth*0.04),
+              style: TextStyle(color: AppColors.textColor, fontSize: screenWidth*0.04),
         ),
         onPressed: () => _pickDate(context, true),
       ),
@@ -325,7 +315,7 @@ Row(
           _deadline == null
               ? 'Select Deadline'
               : 'Deadline: ${_deadline!.toLocal().toString().split(' ')[0]}',
-              style: TextStyle(color: Colors.black, fontSize: screenWidth*0.045),
+              style: TextStyle(color: AppColors.textColor, fontSize: screenWidth*0.045),
         ),
         onPressed: () => _pickDate(context, false),
       ),
@@ -369,7 +359,10 @@ Row(
         final intern = interns[index];
         return Card(
   child: ListTile(
-    leading: const Icon(Icons.person),
+    leading:  CircleAvatar(
+              radius: 30,
+              backgroundColor: AppColors.tertiaryColor,
+              child: Icon(Icons.person, size: 50, color: const Color.fromARGB(255, 250, 250, 250),)),
     title: Text(intern['name'] ?? 'Unnamed'),
     subtitle: Text(intern['email'] ?? 'No email'),
     trailing: IconButton(
@@ -391,7 +384,7 @@ Row(
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('submissions')
-                  .where('supervisorId', isEqualTo: 'SUPERVISOR_ID') // Replace with actual ID
+                  .where('supervisorId', isEqualTo: FirebaseAuth.instance.currentUser?.uid) // Replace with actual ID
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {

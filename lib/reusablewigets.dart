@@ -14,6 +14,7 @@ class AppColors {
   static const Color secondaryColor = Color.fromARGB(255, 100, 99, 99);
   static const Color backgroundColor = Color.fromARGB(250, 255, 250, 250);
   static const Color textColor = Color(0xFF333333);
+  static const Color tertiaryColor =  Color.fromARGB(255, 180, 86, 86);
 }
  class LabeledTextField extends StatelessWidget {
   final String labelText;
@@ -44,7 +45,7 @@ class AppColors {
           alignment: Alignment.centerLeft,
           child: Text(labelText, style: TextStyle(fontSize: screenWidth * 0.05, fontWeight: FontWeight.bold)),
         ),
-        SizedBox(height: screenHeight * 0.01),
+        SizedBox(height: screenHeight * 0.005),
         TextField(
           controller: controller,
           obscureText: obscureText,
@@ -110,7 +111,6 @@ class AppColors {
     @override
     Widget build(BuildContext context) {
        final screenWidth = MediaQuery.of(context).size.width;
-  final screenHeight = MediaQuery.of(context).size.height;
 
     return Padding(
       padding: const EdgeInsets.only(top: 50, left: 15, right: 15),
@@ -120,7 +120,7 @@ class AppColors {
         keyboardType: keyboardType,
         style: TextStyle(
           fontSize: screenWidth * 0.04,
-          color: Colors.black,
+          color: AppColors.textColor,
           fontWeight: FontWeight.bold,
         ),
         decoration: InputDecoration(

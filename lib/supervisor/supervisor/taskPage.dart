@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intern_system/supervisor/supervisor_home_pages/reusablewigets.dart';
+import 'package:intern_system/reusablewigets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SupervisorTask extends StatefulWidget {
@@ -29,13 +29,17 @@ class SupervisorTaskState extends State<SupervisorTask> {
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
   backgroundColor: AppColors.primaryColor,
-  leading:
-  IconButton(
-    icon: Icon(Icons.arrow_back, color: Colors.white,),
-    onPressed: () {
+ leading: IconButton(
+  icon: Icon(Icons.arrow_back, color: Colors.white, ),
+  onPressed: () {
+    if (Navigator.canPop(context)) {
       Navigator.pop(context);
-    },
-  ),
+    } else {
+      Navigator.pushReplacementNamed(context, '/');
+    }
+  },
+),
+
   title: Align(
     child: Text(
       "Bit Tracks task Assignment",
@@ -50,9 +54,7 @@ class SupervisorTaskState extends State<SupervisorTask> {
   actions: [
     IconButton(
       icon: Icon(Icons.book_online_outlined, color: Colors.white),
-      onPressed: () {
-        // Add your action here
-      },
+      onPressed: () {},
     ),
   ],
   
@@ -85,7 +87,7 @@ class SupervisorTaskState extends State<SupervisorTask> {
                 return Card(
                   margin: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
                   child: ListTile(
-                    title: Text(data['title'] ?? 'No Title', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                    title: Text(data['title'] ?? 'No Title', style: TextStyle(fontSize: screenWidth*0.04, fontWeight: FontWeight.bold),),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -149,9 +151,9 @@ class SupervisorTaskState extends State<SupervisorTask> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: titleController, decoration:  InputDecoration(labelText: 'Title', labelStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+            TextField(controller: titleController, decoration:  InputDecoration(labelText: 'Title', labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
             SizedBox(height: 10),
-            TextField(controller: descriptionController,  maxLines: 10, decoration: const InputDecoration(labelText: 'Description', labelStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+            TextField(controller: descriptionController,  maxLines: 10, decoration: const InputDecoration(labelText: 'Description', labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
           ],
         ),
         actions: [
