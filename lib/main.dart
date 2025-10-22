@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:intern_system/Intern/dashborad.dart';
 import 'firebase_options.dart';
 
-import 'package:intern_system/login_pages/welcomepage.dart';
 import 'package:intern_system/admin/dashboard.dart';
 import 'package:intern_system/supervisor/supervisor/dashboard.dart';
 import 'package:intern_system/authGate.dart';

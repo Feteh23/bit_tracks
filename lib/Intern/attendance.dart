@@ -42,8 +42,8 @@ void initState() {
           height: screenHeight*0.4,
           child: Column(
             children: [
-              Text("Attendance History", style: TextStyle(fontSize: screenWidth*0.024, fontWeight: FontWeight.bold)),
-              SizedBox(height: screenHeight*0.025),
+              Text("Attendance History", style: TextStyle(fontSize: screenWidth*0.045, fontWeight: FontWeight.bold)),
+              SizedBox(height: screenHeight*0.045),
               Expanded(
                 child: ListView.builder(
                   itemCount: sortedEntries.length,

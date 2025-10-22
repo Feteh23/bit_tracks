@@ -26,16 +26,18 @@ class _AdminHomepageState extends State<AdminHomepage> {
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
         'name': nameController.text.trim(),
         'email': emailController.text.trim(),
+        'number': phoneController.text.trim(),
         'role': selectedRole,
         'branch': '', 
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User created successfully', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.textColor),)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User created successfully', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),)));
       nameController.clear();
       emailController.clear();
       passwordController.clear();
+      phoneController.clear();
       setState(() => selectedRole = 'intern');
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}',  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: AppColors.textColor),)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}',  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),)));
     }
   }
  Future<void> deleteUser(BuildContext context, String uid) async {
@@ -47,11 +49,11 @@ class _AdminHomepageState extends State<AdminHomepage> {
   await docRef.delete();
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-content: Text('User deleted', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: AppColors.textColor),),
+      content: Text('User deleted', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold, color: Colors.white),),
       action: SnackBarAction(label: 'Undo',onPressed: () async {
           await FirebaseFirestore.instance.collection('users').doc(uid).set(userData!);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('User restored', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: AppColors.textColor
+            SnackBar(content: Text('User restored', style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.white
     ),)),
           );
         },
@@ -72,6 +74,7 @@ content: Text('User deleted', style: TextStyle(fontSize: 16,fontWeight: FontWeig
           appBar: PreferredSize(
              preferredSize: Size.fromHeight(150.0),
             child: AppBar(
+              automaticallyImplyLeading: false,
               backgroundColor: AppColors.primaryColor,
               title: Align(
                 child: Text('Admin Dashboard',style: TextStyle(fontSize: screenWidth * 0.07,fontWeight: FontWeight.bold,color: Colors.white,),
@@ -111,7 +114,7 @@ content: Text('User deleted', style: TextStyle(fontSize: 16,fontWeight: FontWeig
                       SizedBox(height: screenHeight * 0.02),
                       StyledTextField(labelText: 'Phone', hintText: 'Enter phone number', controller: phoneController, keyboardType: TextInputType.phone,),
                       SizedBox(height: screenHeight * 0.02),
-                      StyledTextField(labelText: 'Password',hintText: 'Enter password',controller: passwordController,obscureText: true,
+                      StyledTextField(labelText: 'Password',hintText: 'Enter password',controller: passwordController,obscureText: false,
                         suffixIcon:  IconButton(
                     icon: Icon(_isPasswordHidden ? Icons.visibility : Icons.visibility_off),
                     onPressed: () => setState(() => _isPasswordHidden = !_isPasswordHidden),

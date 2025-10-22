@@ -22,6 +22,7 @@ class Home extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: const Color.fromARGB(255, 114, 26, 20),
           leading: Builder(builder: (BuildContext context) {
             return IconButton(
@@ -30,14 +31,14 @@ class Home extends StatelessWidget {
               },
               icon: const Icon(Icons.menu),
               color: Colors.white,
-              iconSize: screenWidth*0.065,
+              iconSize: screenWidth*0.08,
             );
           }),
           title:  Align(
             child: Text(
               "Intern Dashboard",
               style: TextStyle(
-                fontSize: screenWidth*0.04,
+                fontSize: screenWidth*0.054,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
